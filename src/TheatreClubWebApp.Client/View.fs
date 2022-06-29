@@ -46,6 +46,7 @@ let AppView () =
                     ]
                     Daisy.button.button [
                          prop.text "Rezervace"
+                         prop.onClick (fun _ -> Page.Reservations |> Router.navigatePage)
 
                     ]
                 ]
