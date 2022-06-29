@@ -28,7 +28,7 @@ let AppView () =
 
     let navigation =
         Daisy.navbar [
-            prop.className "mb-2 shadow-lg bg-neutral text-neutral-content rounded-box"
+            prop.className "mb-4 shadow-lg bg-neutral text-neutral-content rounded-box"
             prop.children [
                 Daisy.navbarStart []
                 Daisy.navbarCenter [

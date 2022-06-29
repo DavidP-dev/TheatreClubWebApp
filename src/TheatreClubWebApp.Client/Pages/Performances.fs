@@ -5,23 +5,28 @@ open Feliz.DaisyUI
 
 [<ReactComponent>]
 let PerformancesView () =
-    Html.div[
-
-        Daisy.button.button [
-            button.outline
-            button.primary
-            button.lg
-            prop.text "Do NOT click on me!"
-        ]
-
-        Daisy.table [
-            prop.className "w-full"
+        Html.div[
+            prop.className "flex flex-col gap-4"
             prop.children [
-                Html.thead [Html.tr [Html.th ""; Html.th "Name"; Html.th "Job"; Html.th "Favorite Color"]]
-                Html.tbody [Html.tr [Html.td "1"; Html.td "Cy Ganderton"; Html.td "Quality Control Specialist"; Html.td "Blue"]]
-                Html.tbody [Html.tr [Html.td "2"; Html.td "Hart Hagerty"; Html.td "Desktop Support Technician"; Html.td "Purple"]]
-                Html.tbody [Html.tr [Html.td "3"; Html.td "Brice Swyre"; Html.td "Tax Accountant"; Html.td "Red"]]
-                Html.tbody [Html.tr [Html.td "4"; Html.td "Marjy Ferencz"; Html.td "Office Assistant I"; Html.td "Crimson"]]
+                Html.div[
+                    prop.className "flex justify-center"
+                    prop.children[
+                        Daisy.button.button [
+                            button.outline
+                            button.primary
+                            button.lg
+                            prop.text "Přidej představení"
+                            ]
+                    ]
+                ]
+                Daisy.table [
+                    prop.className "w-full"
+                    prop.children [
+                        Html.thead [Html.tr [Html.th ""; Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
+                        Html.tbody [Html.tr [Html.td "1"; Html.td "Dvořáčková"; Html.td "Petra"; Html.td "tloustnurychle@seznam.cz"; Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "2"; Html.td "Ferjentsik"; Html.td "Karel"; Html.td "karelnahrad@seznam.cz"; Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "3"; Html.td "Pícha"; Html.td "David";Html.td "picha.mda@seznam.cz"; Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
+                    ]
+                ]
             ]
         ]
-    ]
