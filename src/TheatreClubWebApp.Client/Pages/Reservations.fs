@@ -22,10 +22,10 @@ let ReservationsView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th ""; Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
-                        Html.tbody [Html.tr [Html.td "1"; Html.td "Dvořáčková"; Html.td "Petra"; Html.td "tloustnurychle@seznam.cz"; Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "2"; Html.td "Ferjentsik"; Html.td "Karel"; Html.td "karelnahrad@seznam.cz"; Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "3"; Html.td "Pícha"; Html.td "David";Html.td "picha.mda@seznam.cz"; Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
+                        Html.thead [Html.tr [Html.th ""; Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace představení"]]
+                        Html.tbody [Html.tr [Html.td "1"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Ferjentsik Karel"; Html.td "NE"; Html.td "ANO"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "2"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Dvořáčková Petra"; Html.td "ANO"; Html.td "NE"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "3"; Html.td "Hubte skauty, serou v lese"; Html.td "10.10.2022 19:00 hod."; Html.td "Pícha David"; Html.td "ANO"; Html.td "ANO"; Html.td "Editovat / Smazat"]]
                     ]
                 ]
             ]

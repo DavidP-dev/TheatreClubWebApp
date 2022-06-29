@@ -22,10 +22,10 @@ let PerformancesView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th ""; Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
-                        Html.tbody [Html.tr [Html.td "1"; Html.td "Dvořáčková"; Html.td "Petra"; Html.td "tloustnurychle@seznam.cz"; Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "2"; Html.td "Ferjentsik"; Html.td "Karel"; Html.td "karelnahrad@seznam.cz"; Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "3"; Html.td "Pícha"; Html.td "David";Html.td "picha.mda@seznam.cz"; Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
+                        Html.thead [Html.tr [Html.th ""; Html.th "Divadelní představení"; Html.th "Datum a čas"; Html.th "Žánr"; Html.th "Aktivní rezervace"; Html.th "Editace představení";]]
+                        Html.tbody [Html.tr [Html.td "1"; Html.td "Hubte skauty, serou v lese"; Html.td "10.10.2022 19:30 hod.";  Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "2"; Html.td "Harold a Maud"; Html.td "09.09.2022 19:00 hod.";  Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
+                        Html.tbody [Html.tr [Html.td "3"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
                     ]
                 ]
             ]
