@@ -3,6 +3,7 @@ module TheatreClubWebApp.Client.Pages.Members
 open System
 open Feliz
 open Feliz.DaisyUI
+open TheatreClubWebApp.Client.Server
 
 
 type MemberWeb =
@@ -16,6 +17,28 @@ type MemberWeb =
 
 [<ReactComponent>]
 let MembersView () =
+        let members, setMembers = React.useState(List.empty)
+
+        let loadMembers () = async {
+            let! members = service.GetClubMembers()
+            setMembers members
+        }
+        React.useEffectOnce(loadMembers >> Async.StartImmediate)
+
+        let memberRows =
+            members
+            |> List.map (fun m ->
+                Html.tr [
+                    Html.td m.Surname
+                    Html.td m.Name
+                    Html.td m.Email
+                    Html.td (String.Join(", ", m.PreferredGenres))
+                    Html.td "2"
+                    Html.td "Editovat / Smazat"
+                ]
+            )
+
+
         Html.div[
             prop.className "flex flex-col gap-4"
             prop.children [
@@ -33,10 +56,8 @@ let MembersView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th ""; Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
-                        Html.tbody [Html.tr [Html.td "1"; Html.td "Dvořáčková"; Html.td "Petra"; Html.td "tloustnurychle@seznam.cz"; Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "2"; Html.td "Ferjentsik"; Html.td "Karel"; Html.td "karelnahrad@seznam.cz"; Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "3"; Html.td "Pícha"; Html.td "David";Html.td "picha.mda@seznam.cz"; Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
+                        Html.thead [Html.tr [Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
+                        Html.tbody memberRows
                     ]
                 ]
             ]

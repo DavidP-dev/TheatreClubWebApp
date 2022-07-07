@@ -17,6 +17,9 @@ nuget Feliz.DaisyUI
 nuget Feliz.Router
 nuget Feliz.UseElmish
 
+nuget Dapper.FSharp
+nuget Microsoft.Data.SqlClient
+
 nuget FsToolkit.ErrorHandling.TaskResult
 
 group Build
