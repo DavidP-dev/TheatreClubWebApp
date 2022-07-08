@@ -2,9 +2,32 @@ module TheatreClubWebApp.Client.Pages.Reservations
 
 open Feliz
 open Feliz.DaisyUI
+open TheatreClubWebApp.Client.Pages
 
 [<ReactComponent>]
 let ReservationsView () =
+        let reservations, setReservations = React.useState(List.empty)
+
+        let loadReservations () = async {
+            let! reservations = serviceR.GetReservations()
+            setReservations reservations
+        }
+        React.useEffectOnce(loadReservations >> Async.StartImmediate)
+
+        let memberRows =
+            reservations
+            |> List.map (fun r ->
+                Html.tr [
+                    Html.td r.Title
+                    Html.td r.Theatre
+                    Html.td r.DateAndTime
+                    Html.td r.Cost
+                    Html.td r.Genres
+                    Html.td "2"
+                    Html.td "Editovat / Smazat"
+                ]
+            )
+
         Html.div[
             prop.className "flex flex-col gap-4"
             prop.children [
@@ -23,9 +46,7 @@ let ReservationsView () =
                     prop.className "w-full"
                     prop.children [
                         Html.thead [Html.tr [Html.th ""; Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace představení"]]
-                        Html.tbody [Html.tr [Html.td "1"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Ferjentsik Karel"; Html.td "NE"; Html.td "ANO"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "2"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Dvořáčková Petra"; Html.td "ANO"; Html.td "NE"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "3"; Html.td "Hubte skauty, serou v lese"; Html.td "10.10.2022 19:00 hod."; Html.td "Pícha David"; Html.td "ANO"; Html.td "ANO"; Html.td "Editovat / Smazat"]]
+
                     ]
                 ]
             ]

@@ -1,5 +1,6 @@
 module TheatreClubWebApp.Client.Pages.Performances
 
+open System
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
@@ -19,7 +20,7 @@ let PerformancesView () =
             |> List.map ( fun p ->
                 Html.tr [
                     Html.td p.Title
-                    Html.td p.DateAndTime
+                    Html.td "12:00 hod."
                     Html.td p.Theatre
                     Html.td (String.Join(", ", p.Genres ))
                     Html.td "0"

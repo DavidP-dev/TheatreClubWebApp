@@ -32,22 +32,6 @@ let getServiceFromCtx (httpContext: HttpContext) =
 
 }
 
-let getServiceFromCtxP (httpContext: HttpContext) =
-    let dbConn = httpContext.GetService<IDbConnection>()
-    {
-    GetMessage = fun success ->
-        task {
-            if success then return "Hi from Server!"
-            else return ServerError.failwith (ServerError.Exception "OMG, something terrible happened")
-        }
-        |> Async.AwaitTask
-    GetPerformances = fun _ ->
-        task {
-            return getAllPerformances dbConn
-        }
-        |> Async.AwaitTask
-
-}
 
 let webApp : HttpHandler =
     let remoting logger =
