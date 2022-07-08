@@ -27,3 +27,8 @@ let service =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Service.RouteBuilder
     |> Remoting.buildProxy<Service>
+
+let serviceP =
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder Service.RouteBuilder
+    |> Remoting.buildProxy<ServiceP>

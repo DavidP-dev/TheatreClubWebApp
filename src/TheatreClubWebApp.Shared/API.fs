@@ -9,3 +9,12 @@ type Service = {
 }
 with
     static member RouteBuilder _ m = sprintf "/api/service/%s" m
+
+
+type ServiceP = {
+    GetMessage : bool -> Async<string>
+
+    GetPerformances: unit -> Async<Performance list>
+}
+with
+    static member RouteBuilder _ m = sprintf "/api/service/%s" m

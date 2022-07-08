@@ -9,7 +9,7 @@ open TheatreClubWebApp.Client.Server
 let PerformancesView () =
         let performances, setPerformances = React.useState(List.Empty)
         let loadPerformances () = async {
-            let! performances = service.GetPerfromances()
+            let! performances = serviceP.GetPerformances()
             setPerformances performances
         }
         React.useEffectOnce(loadPerformances >> Async.StartImmediate)
@@ -18,7 +18,12 @@ let PerformancesView () =
             performances
             |> List.map ( fun p ->
                 Html.tr [
-                    Html.td p.
+                    Html.td p.Title
+                    Html.td p.DateAndTime
+                    Html.td p.Theatre
+                    Html.td (String.Join(", ", p.Genres ))
+                    Html.td "0"
+                    Html.td "Editovat / Smazat"
                 ]
                 )
         Html.div[
@@ -38,10 +43,8 @@ let PerformancesView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th ""; Html.th "Divadelní představení"; Html.th "Datum a čas"; Html.th "Divadlo"; Html.th "Žánr"; Html.th "Aktivní rezervace"; Html.th "Editace představení";]]
-                        Html.tbody [Html.tr [Html.td "1"; Html.td "Hubte skauty, serou v lese"; Html.td "10.10.2022 19:30 hod."; Html.td "Divadlo pod Palmovkou"; Html.td "Komedie, Taneční"; Html.td "2"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "2"; Html.td "Harold a Maud"; Html.td "09.09.2022 19:00 hod."; Html.td "Dejvické divadlo";  Html.td "Filozofie, Taneční"; Html.td "1"; Html.td "Editovat / Smazat"]]
-                        Html.tbody [Html.tr [Html.td "3"; Html.td "PROTON!"; Html.td "07.10.2022 19:00 hod."; Html.td "Jatka 78";Html.td "Umění, Filozofie, Komedie"; Html.td "0"; Html.td "Editovat / Smazat"]]
+                        Html.thead [Html.tr [Html.th "Divadelní představení"; Html.th "Datum a čas"; Html.th "Divadlo"; Html.th "Žánr"; Html.th "Aktivní rezervace"; Html.th "Editace představení";]]
+                        Html.tbody performanceRows
                     ]
                 ]
             ]
