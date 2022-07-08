@@ -5,16 +5,6 @@ open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
 
-
-type MemberWeb =
-     {
-     Id : Guid
-     Name : string
-     Surname : string
-     Email : string
-     PreferredGenres : string
-     }
-
 [<ReactComponent>]
 let MembersView () =
         let members, setMembers = React.useState(List.empty)

@@ -2,9 +2,25 @@ module TheatreClubWebApp.Client.Pages.Performances
 
 open Feliz
 open Feliz.DaisyUI
+open TheatreClubWebApp.Client.Server
+
 
 [<ReactComponent>]
 let PerformancesView () =
+        let performances, setPerformances = React.useState(List.Empty)
+        let loadPerformances () = async {
+            let! performances = service.GetPerfromances()
+            setPerformances performances
+        }
+        React.useEffectOnce(loadPerformances >> Async.StartImmediate)
+
+        let performanceRows =
+            performances
+            |> List.map ( fun p ->
+                Html.tr [
+                    Html.td p.
+                ]
+                )
         Html.div[
             prop.className "flex flex-col gap-4"
             prop.children [
