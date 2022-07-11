@@ -293,6 +293,19 @@ let returnAllUnpaidReservations (conn:IDbConnection) =
     v
     |> Seq.toList |> List.map(ReservationDB.toDomain)
 
+// Returns list with member by ID
+let returnClubMemberById (conn:IDbConnection) (cId:Guid)  =
+    let output =
+        select {
+            for m in membersTable do
+            where (m.Id = cId)
+        }
+        |> conn.SelectAsync<MemberDB>
+    let v = output.Result
+    v |> Seq.toList |> List.map(MembersDb.toDomain)
+
+// Returns performance by ID
+
 // Returns club members by preferred genres
 let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
     let genreString = MembersDb.dapperGenreString genre

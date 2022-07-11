@@ -1,5 +1,6 @@
 module TheatreClubWebApp.Server.Business
 
+open System
 open System.Data
 open TheatreClubWebApp.Shared.Domain
 open Database
@@ -70,6 +71,9 @@ let getAllUndeliveredReservations (conn:IDbConnection) =
 let getAllUnpaidReservations (conn:IDbConnection) =
     let unPaidReservationsList = returnAllUnpaidReservations conn
     printfn "Zde je aktuální seznam nezaplacených objednávek %A" unPaidReservationsList
+
+// Return member by ID
+// let getClubMemberById (conn:IDbConnection) (cId:Guid) =
 
 // Return club members by genre
 let getClubMembersByGenre (conn:IDbConnection) (genre:Genre) =
