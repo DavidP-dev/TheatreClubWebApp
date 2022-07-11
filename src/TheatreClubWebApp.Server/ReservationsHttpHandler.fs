@@ -1,4 +1,4 @@
-﻿module TheatreClubWebApp.Server.ClubMembersHttpHandlers
+module TheatreClubWebApp.Server.ReservationsHttpHandler
 
 open System.Data
 open Giraffe
@@ -14,12 +14,11 @@ open TheatreClubWebApp.Shared.Errors
 open TheatreClubWebApp.Server.Business
 
 
-
 let getService (dbConn: IDbConnection) =
     {
-    GetClubMembers = fun _ ->
+    GetReservations = fun _ ->
         task {
-            return getAllClubMembers dbConn
+            return getAllReservations dbConn
         }
         |> Async.AwaitTask
 
@@ -29,10 +28,9 @@ let getService (dbConn: IDbConnection) =
 let handler : HttpHandler =
     let remoting logger dbConn =
         Remoting.createApi()
-        |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+        |> Remoting.withRouteBuilder ReservationsService.RouteBuilder
         |> Remoting.fromValue (getService dbConn)
         |> Remoting.withErrorHandler (Remoting.errorHandler logger)
         |> Remoting.buildHttpHandler
 
     Require.services<ILogger<_>,IDbConnection> remoting
-
