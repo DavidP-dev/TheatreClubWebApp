@@ -2,7 +2,7 @@ module TheatreClubWebApp.Client.Pages.Reservations
 
 open Feliz
 open Feliz.DaisyUI
-open TheatreClubWebApp.Client.Pages
+open TheatreClubWebApp.Client.Server
 
 [<ReactComponent>]
 let ReservationsView () =

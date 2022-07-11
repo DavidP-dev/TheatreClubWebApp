@@ -25,15 +25,15 @@ module Cmd =
 
 let service =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder Service.RouteBuilder
-    |> Remoting.buildProxy<Service>
+    |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+    |> Remoting.buildProxy<ClubMembersService>
 
 let serviceP =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder Service.RouteBuilder
-    |> Remoting.buildProxy<ServiceP>
+    |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+    |> Remoting.buildProxy<PerformancesService>
 
 let serviceR =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder Service.RouteBuilder
-    |> Remoting.buildProxy<ServiceR>
+    |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+    |> Remoting.buildProxy<ReservationsService>

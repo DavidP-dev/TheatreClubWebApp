@@ -20,7 +20,7 @@ let PerformancesView () =
             |> List.map ( fun p ->
                 Html.tr [
                     Html.td p.Title
-                    Html.td "12:00 hod."
+                    Html.td (p.DateAndTime.ToString("dd.MM.YYYY hh:mm"))
                     Html.td p.Theatre
                     Html.td (String.Join(", ", p.Genres ))
                     Html.td "0"

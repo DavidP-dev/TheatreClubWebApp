@@ -2,28 +2,22 @@
 
 open TheatreClubWebApp.Shared.Domain
 
-type Service = {
-    GetMessage : bool -> Async<string>
-
+type ClubMembersService = {
     GetClubMembers : unit -> Async<ClubMember list>
 }
 with
-    static member RouteBuilder _ m = sprintf "/api/service/%s" m
+    static member RouteBuilder _ m = sprintf "/api/clubmembers/%s" m
 
 
-type ServiceP = {
-    GetMessage : bool -> Async<string>
-
+type PerformancesService = {
     GetPerformances : unit -> Async<Performance list>
 }
 with
-    static member RouteBuilder _ m = sprintf "/api/service/%s" m
+    static member RouteBuilder _ m = sprintf "/api/performances/%s" m
 
-type ServiceR = {
-    GetMessage : bool -> Async<string>
-
+type ReservationsService = {
     GetReservations : unit -> Async<Reservation list>
 }
 with
-    static member RouteBuilder _ m = sprintf "/api/service/%s" m
+    static member RouteBuilder _ m = sprintf "/api/reservations/%s" m
 
