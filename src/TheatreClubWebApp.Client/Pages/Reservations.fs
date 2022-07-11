@@ -14,7 +14,7 @@ let ReservationsView () =
         }
         React.useEffectOnce(loadReservations >> Async.StartImmediate)
 
-        let memberRows =
+        let reservationsRows =
             reservations
             |> List.map (fun r ->
                 Html.tr [
@@ -45,8 +45,8 @@ let ReservationsView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th ""; Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace představení"]]
-
+                        Html.thead [Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace představení"]]
+                        Html.tbody reservationsRows
                     ]
                 ]
             ]
