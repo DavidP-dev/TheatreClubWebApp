@@ -18,12 +18,11 @@ let ReservationsView () =
             reservations
             |> List.map (fun r ->
                 Html.tr [
-                    Html.td r.Title
-                    Html.td r.Theatre
-                    Html.td r.DateAndTime
-                    Html.td r.Cost
-                    Html.td r.Genres
-                    Html.td "2"
+                    Html.td r.PerformanceTitle
+                    Html.td (r.PerformanceDateAndTime.ToString("dd.MM.YYYY hh:mm"))
+                    Html.td (r.MemberName + " " +  r.MemberSurname)
+                    Html.td (r.IsPaid.ToString())
+                    Html.td (r.TicketsReceived.ToString())
                     Html.td "Editovat / Smazat"
                 ]
             )
@@ -45,7 +44,7 @@ let ReservationsView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace představení"]]
+                        Html.thead [Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace rezervace"]
                         Html.tbody reservationsRows
                     ]
                 ]

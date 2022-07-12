@@ -42,7 +42,11 @@ type Reservation =
     {
         ReservationID : Guid
         MemberId : Guid
+        MemberName : string
+        MemberSurname : String
         PerformanceId : Guid
+        PerformanceTitle : string
+        PerformanceDateAndTime : DateTimeOffset
         IsPaid : bool
         TicketsReceived : bool
     }

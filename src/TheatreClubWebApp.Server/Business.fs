@@ -55,12 +55,12 @@ let getAllClubMembers (conn:IDbConnection) =
 // Returns all performances
 let getAllPerformances (conn:IDbConnection) =
     let performancesList = returnAllPerformancesFromDb conn
-    printfn "Zde je aktuální seznam her v dabázi: %A" performancesList
+    performancesList
 
 // Returns all reservations
 let getAllReservations (conn:IDbConnection) =
     let reservationsList = returnAllReservationsFromDb conn
-    printfn "Zde je aktuální seznam rezervací: %A" reservationsList
+    reservationsList
 
 // Returns all undelivered reservations
 let getAllUndeliveredReservations (conn:IDbConnection) =

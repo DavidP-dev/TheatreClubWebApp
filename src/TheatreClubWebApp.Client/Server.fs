@@ -30,10 +30,10 @@ let service =
 
 let serviceP =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+    |> Remoting.withRouteBuilder PerformancesService.RouteBuilder
     |> Remoting.buildProxy<PerformancesService>
 
 let serviceR =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder ClubMembersService.RouteBuilder
+    |> Remoting.withRouteBuilder ReservationsService.RouteBuilder
     |> Remoting.buildProxy<ReservationsService>
