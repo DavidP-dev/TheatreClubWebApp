@@ -73,7 +73,14 @@ let getAllUnpaidReservations (conn:IDbConnection) =
     printfn "Zde je aktuální seznam nezaplacených objednávek %A" unPaidReservationsList
 
 // Return member by ID
-// let getClubMemberById (conn:IDbConnection) (cId:Guid) =
+let getClubMemberById (conn:IDbConnection) (cId:Guid) =
+    let memberById = returnClubMemberById conn cId |> List.head
+    memberById
+
+// Return reservation by ID
+let getPerformanceById (con:IDbConnection) (cId:Guid) =
+    let performanceById =  returnPerformanceById con cId |> List.head
+    performanceById
 
 // Return club members by genre
 let getClubMembersByGenre (conn:IDbConnection) (genre:Genre) =
