@@ -47,7 +47,7 @@ type Reservation =
         PerformanceId : Guid
         PerformanceTitle : string
         PerformanceDateAndTime : DateTimeOffset
-        IsPaid : bool
-        TicketsReceived : bool
+        IsPaid : string
+        TicketsReceived : string
     }
 

@@ -46,6 +46,22 @@ type ReservationDB =
         }
 
 // Modules for transferring data from database layer to domain layer and opposite
+module Transfers =
+    let dateTimeToString (dateTime: DateTimeOffset) :string =
+        let dateTimeString = dateTime.ToString()
+        dateTimeString
+    let boolToString (b:bool) :string =
+        let stringFromBool =
+            match b with
+            | true -> "Ano"
+            | false -> "Ne"
+        stringFromBool
+    let stringToBool (s:string) :bool =
+        let boolFromString =
+            match s with
+            | "Ano" -> true
+            | "Ne" -> false
+        boolFromString
 module MembersDb =
     let parseGenre (gn :string) : Genre =
         match gn with
@@ -122,15 +138,15 @@ module ReservationDB =
         PerformanceDateAndTime = DateTimeOffset.Now
         MemberId = db.MemberId
         PerformanceId = db.PerformanceId
-        IsPaid = db.IsPaid
-        TicketsReceived = db.TicketsReceived
+        IsPaid = db.IsPaid |> Transfers.boolToString
+        TicketsReceived = db.TicketsReceived |> Transfers.boolToString
     }
     let toDatabase (dm:Reservation) : ReservationDB = {
         ReservationID = dm.ReservationID
         MemberId = dm.MemberId
         PerformanceId = dm.PerformanceId
-        IsPaid = dm.IsPaid
-        TicketsReceived = dm.IsPaid
+        IsPaid = dm.IsPaid |> Transfers.stringToBool
+        TicketsReceived = dm.IsPaid |> Transfers.stringToBool
     }
 
 // names of database tables
