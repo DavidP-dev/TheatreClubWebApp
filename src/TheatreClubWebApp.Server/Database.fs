@@ -32,6 +32,8 @@ type PerformanceDB =
         Title : string
         Theatre : string
         DateAndTime: DateTimeOffset
+        Tickets : int
+        Reservations : int
         Cost : int
         Genres : string
     }
@@ -61,6 +63,7 @@ module Transfers =
             match s with
             | "Ano" -> true
             | "Ne" -> false
+            | _ -> failwith $"Možnost -{s}-neexistuje!!!"
         boolFromString
 module MembersDb =
     let parseGenre (gn :string) : Genre =
@@ -117,6 +120,8 @@ module PerformancesDB =
         Title = db.Title
         Theatre = db.Theatre
         DateAndTime = db.DateAndTime
+        Tickets = db.Tickets |> string
+        Reservations = db.Reservations |> string
         Cost = db.Cost
         Genres =  db.Genres.Split(",") |> Array.map MembersDb.parseGenre |> List.ofArray
         }
@@ -126,6 +131,8 @@ module PerformancesDB =
         Title = dm.Title
         Theatre = dm.Theatre
         DateAndTime = dm.DateAndTime
+        Tickets = dm.Tickets |> int
+        Reservations = dm.Reservations |> int
         Cost = dm.Cost
         Genres = dm.Genres |> List.map MembersDb.genreToString |> (fun x -> String.Join(",", x))}
 

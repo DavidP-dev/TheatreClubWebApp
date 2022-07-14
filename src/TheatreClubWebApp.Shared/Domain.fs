@@ -33,6 +33,8 @@ type Performance =
         Title : string
         Theatre : string
         DateAndTime: DateTimeOffset
+        Tickets : string
+        Reservations : string
         Cost : int
         Genres : Genre list
     }

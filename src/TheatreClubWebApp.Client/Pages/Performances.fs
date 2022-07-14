@@ -21,9 +21,8 @@ let PerformancesView () =
                 Html.tr [
                     Html.td p.Title
                     Html.td (p.DateAndTime.ToString("dd.MM.YYYY hh:mm"))
-                    Html.td p.Theatre
-                    Html.td (String.Join(", ", p.Genres ))
-                    Html.td "0"
+                    Html.td p.Tickets
+                    Html.td "4"
                     Html.td "Editovat / Smazat"
                 ]
                 )
@@ -44,7 +43,7 @@ let PerformancesView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th "Divadelní představení"; Html.th "Datum a čas"; Html.th "Divadlo"; Html.th "Žánr"; Html.th "Aktivní rezervace"; Html.th "Editace představení";]]
+                        Html.thead [Html.tr [Html.th "Divadelní představení"; Html.th "Datum a čas"; Html.th "Počet vstupenek"; Html.th "Aktivní rezervace"; Html.th "Editace představení";]]
                         Html.tbody performanceRows
                     ]
                 ]
