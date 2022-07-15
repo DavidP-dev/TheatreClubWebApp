@@ -32,7 +32,7 @@ type PerformanceDB =
         Title : string
         Theatre : string
         DateAndTime: DateTimeOffset
-        Tickets : int
+        NumberOfTickets : int
         Reservations : int
         Cost : int
         Genres : string
@@ -42,7 +42,13 @@ type ReservationDB =
         {
         ReservationID : Guid
         MemberId : Guid
+        MemberName : string
+        MemberSurname: string
         PerformanceId : Guid
+        Theatre : string
+        PerformanceTitle : string
+        PerformanceDateAndTime : DateTimeOffset
+        NumberOfTickets : int
         IsPaid : bool
         TicketsReceived : bool
         }

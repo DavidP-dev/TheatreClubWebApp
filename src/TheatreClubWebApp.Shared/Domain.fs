@@ -33,7 +33,7 @@ type Performance =
         Title : string
         Theatre : string
         DateAndTime: DateTimeOffset
-        Tickets : string
+        NumberOfTickets : string
         Reservations : string
         Cost : int
         Genres : Genre list
@@ -47,8 +47,10 @@ type Reservation =
         MemberName : string
         MemberSurname : String
         PerformanceId : Guid
+        Theatre : string
         PerformanceTitle : string
         PerformanceDateAndTime : DateTimeOffset
+        NumberOfTickets : string
         IsPaid : string
         TicketsReceived : string
     }
