@@ -12,6 +12,7 @@
         <Compile Include="Pages\Reservations.fs" />
         <Compile Include="Pages\Performances.fs" />
         <Compile Include="Pages\Members.fs" />
+        <Compile Include="Pages\AddMember.fs" />
         <Compile Include="View.fs" />
         <Compile Include="App.fs" />
     </ItemGroup>
