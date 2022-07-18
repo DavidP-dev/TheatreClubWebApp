@@ -4,6 +4,7 @@ open System
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
+open TheatreClubWebApp.Client.Router
 
 [<ReactComponent>]
 let MembersView () =
@@ -23,7 +24,7 @@ let MembersView () =
                     Html.td m.Name
                     Html.td m.Email
                     Html.td (String.Join(", ", m.PreferredGenres))
-                    Html.td "2"
+                    Html.td m.MemberReservations
                     Html.td "Editovat / Smazat"
                 ]
             )
@@ -40,6 +41,7 @@ let MembersView () =
                             button.primary
                             button.lg
                             prop.text "Přidej člena"
+                            prop.onClick (fun _ -> Page.AddMember |> Router.navigatePage)
                             ]
                     ]
                 ]

@@ -23,6 +23,7 @@ type ClubMember =
        Surname : string
        Email : string
        PreferredGenres : Genre list
+       MemberReservations : string
 
     }
 

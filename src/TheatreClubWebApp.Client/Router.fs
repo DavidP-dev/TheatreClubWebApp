@@ -9,16 +9,18 @@ type Page =
     | Members
     | Performances
     | Reservations
+    | AddMember
 
 [<RequireQualifiedAccess>]
 module Page =
     let defaultPage = Page.Index
 
     let parseFromUrlSegments = function
+        | [ ] -> Page.Index
         | [ "clenove" ] -> Page.Members
         | [ "predstaveni" ] -> Page.Performances
         | [ "rezervace" ] -> Page.Reservations
-        | [ ] -> Page.Index
+        | [ "pridaniclena" ] -> Page.AddMember
         | _ -> defaultPage
 
     let noQueryString segments : string list * (string * string) list = segments, []
@@ -28,6 +30,7 @@ module Page =
         | Page.Members -> [ "clenove" ] |> noQueryString
         | Page.Performances -> [ "predstaveni" ] |> noQueryString
         | Page.Reservations -> [ "rezervace" ] |> noQueryString
+        | Page.AddMember -> ["pridaniclena"] |> noQueryString
 
 [<RequireQualifiedAccess>]
 module Router =
