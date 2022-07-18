@@ -5,6 +5,18 @@ open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Client.Router
+open TheatreClubWebApp.Shared.Domain
+
+let private toCzech (genre: Genre) : string =
+        match genre with
+        | Alternative -> "Alternativa"
+        | Art -> "Umění"
+        | Comedy -> "Komedie"
+        | Dance -> "Taneční"
+        | Drama -> "Drama"
+        | Mainstream -> "Mejnstrým"
+        | Musical -> "Muzikál"
+        | Philosophy -> "Filosofie"
 
 [<ReactComponent>]
 let MembersView () =
@@ -23,7 +35,7 @@ let MembersView () =
                     Html.td m.Surname
                     Html.td m.Name
                     Html.td m.Email
-                    Html.td (String.Join(", ", m.PreferredGenres))
+                    Html.td (String.Join(", ", (List.map toCzech m.PreferredGenres)))
                     Html.td m.MemberReservations
                     Html.td "Editovat / Smazat"
                 ]

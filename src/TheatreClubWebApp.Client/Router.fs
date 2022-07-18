@@ -10,6 +10,8 @@ type Page =
     | Performances
     | Reservations
     | AddMember
+    | AddPerformance
+    | AddReservation
 
 [<RequireQualifiedAccess>]
 module Page =
@@ -21,6 +23,8 @@ module Page =
         | [ "predstaveni" ] -> Page.Performances
         | [ "rezervace" ] -> Page.Reservations
         | [ "pridaniclena" ] -> Page.AddMember
+        | [ "pridanipredstaveni" ] -> Page.AddPerformance
+        | [ "pridanirezervace" ] -> Page.AddReservation
         | _ -> defaultPage
 
     let noQueryString segments : string list * (string * string) list = segments, []
@@ -30,7 +34,9 @@ module Page =
         | Page.Members -> [ "clenove" ] |> noQueryString
         | Page.Performances -> [ "predstaveni" ] |> noQueryString
         | Page.Reservations -> [ "rezervace" ] |> noQueryString
-        | Page.AddMember -> ["pridaniclena"] |> noQueryString
+        | Page.AddMember -> [ "pridaniclena" ] |> noQueryString
+        | Page.AddPerformance -> [ "pridanipredstaveni" ] |> noQueryString
+        | Page.AddReservation -> [ "pridanirezervace" ] |> noQueryString
 
 [<RequireQualifiedAccess>]
 module Router =

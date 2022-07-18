@@ -1,11 +1,19 @@
 ﻿module TheatreClubWebApp.Client.Pages.Index
 
 open Feliz
+open Feliz.DaisyUI
+
 
 [<ReactComponent>]
 let IndexView () =
     Html.div [
-        prop.className "flex flex-col items-center h-4/5 w-full justify-center absolute"
-        prop.text "Ahoj princezno. V odkazech nahoře najdeš vše, co potřebuješ k vedení klubu"
-    ]
+        prop.className "flex flex-col gap-4 mx-14"
+        prop.children
+            [
+             Daisy.alert [
+                alert.info
+                prop.text "Vítej ve své divadelní databázi. V menu nahoře, klikni, na co potřebuješ."
 
+        ]
+    ]
+]
