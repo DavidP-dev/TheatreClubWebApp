@@ -3,6 +3,7 @@ module TheatreClubWebApp.Client.Pages.Performances
 open System
 open Feliz
 open Feliz.DaisyUI
+open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Client.Server
 
 
@@ -37,6 +38,7 @@ let PerformancesView () =
                             button.primary
                             button.lg
                             prop.text "Přidej představení"
+                            prop.onClick (fun _ -> Page.AddPerformance |> Router.navigatePage)
                             ]
                     ]
                 ]

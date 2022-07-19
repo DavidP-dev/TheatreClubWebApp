@@ -3,6 +3,7 @@ module TheatreClubWebApp.Client.Pages.Reservations
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
+open TheatreClubWebApp.Client.Router
 
 [<ReactComponent>]
 let ReservationsView () =
@@ -38,6 +39,7 @@ let ReservationsView () =
                             button.primary
                             button.lg
                             prop.text "Přidej rezervaci"
+                            prop.onClick (fun _ -> Page.AddReservation |> Router.navigatePage)
                             ]
                     ]
                 ]

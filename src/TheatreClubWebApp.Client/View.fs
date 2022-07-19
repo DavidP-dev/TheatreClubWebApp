@@ -63,6 +63,9 @@ let AppView () =
         | Page.Performances -> Pages.Performances.PerformancesView ()
         | Page.Reservations -> Pages.Reservations.ReservationsView ()
         | Page.AddMember -> Pages.AddMember.AddMemberView ()
+        | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
+        | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
+
     React.router [
         router.pathMode
         router.onUrlChanged (Page.parseFromUrlSegments >> UrlChanged >> dispatch)
