@@ -120,50 +120,74 @@ let private genresRow state dispatch =
                 prop.children [
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Alterna"
-                        Daisy.checkbox [
-                            prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Alternative)
-                            prop.onChange (fun isChecked ->
-                                let newValue =
-                                    if isChecked then
-                                        Genre.Alternative :: state.Member.PreferredGenres
-                                        |> List.distinct
-                                    else
-                                        state.Member.PreferredGenres
-                                        |> List.filter (fun i -> i <> Genre.Alternative)
-                                { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
-                            )
-                        ]
-                        ]
-                    ]
-                    Daisy.formControl [
-                        Daisy.label [
-                        Daisy.labelText "Umění"
-                        Daisy.checkbox [
-                            prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Art)
-                            prop.onChange (fun isChecked ->
-                                let newValue =
-                                    if isChecked then
-                                        Genre.Art :: state.Member.PreferredGenres
-                                        |> List.distinct
-                                    else
-                                        state.Member.PreferredGenres
-                                        |> List.filter (fun i -> i <> Genre.Art)
-                                { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
-                            )
-                        ]
+                            Daisy.labelText "Alterna"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Alternative)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Alternative :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Alternative)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Komedie"
-                        Daisy.checkbox []
+                            Daisy.labelText "Umění"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Art)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Art :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Art)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Tanec"
-                        Daisy.checkbox []
+                            Daisy.labelText "Komedie"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Comedy)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Comedy :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Comedy)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
+                        ]
+                    ]
+                    Daisy.formControl [
+                        Daisy.label [
+                            Daisy.labelText "Tanec"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Dance)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Dance :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Dance)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                 ]
@@ -174,26 +198,74 @@ let private genresRow state dispatch =
                 prop.children [
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Drama"
-                        Daisy.checkbox []
+                            Daisy.labelText "Drama"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Drama)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Drama :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Drama)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Mejnstrým"
-                        Daisy.checkbox []
+                            Daisy.labelText "Mejnstrým"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Mainstream)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Mainstream :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Mainstream)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Muzikál"
-                        Daisy.checkbox []
+                            Daisy.labelText "Muzikál"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Musical)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Musical :: state.Member.PreferredGenres
+                                            |> List.distinct
+                                        else
+                                            state.Member.PreferredGenres
+                                            |> List.filter (fun i -> i <> Genre.Musical)
+                                    { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
                         Daisy.labelText "Filosofie"
-                        Daisy.checkbox []
+                        Daisy.checkbox [
+                            prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Philosophy)
+                            prop.onChange (fun isChecked ->
+                                let newValue =
+                                    if isChecked then
+                                        Genre.Dance :: state.Member.PreferredGenres
+                                        |> List.distinct
+                                    else
+                                        state.Member.PreferredGenres
+                                        |> List.filter (fun i -> i <> Genre.Philosophy)
+                                { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                 ]
