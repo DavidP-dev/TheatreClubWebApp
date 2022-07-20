@@ -51,7 +51,6 @@ let private inputRow state dispatch =
         prop.children [
             Daisy.formControl [
                 Daisy.label [
-
                     prop.for' "name"
                     prop.children [
                         Daisy.labelText "Jméno:"
@@ -68,12 +67,37 @@ let private inputRow state dispatch =
                 ]
             ]
             Daisy.formControl [
-                Daisy.label [Daisy.labelText "Příjmení:"]
-                Daisy.input [input.bordered; prop.placeholder "Příjmení"]
+                Daisy.label [
+                    prop.for' "Surname"
+                    prop.children [
+                        Daisy.labelText "Příjmení:"
+                    ]
+                ]
+                Daisy.input [
+                    input.bordered
+                    prop.placeholder "Příjmení"
+                    prop.name "Surname"
+                    prop.value state.Member.Surname
+                    prop.onChange (fun v ->
+                        {state.Member with Surname = v } |> FormChanged |> dispatch
+                    )
+                ]
             ]
             Daisy.formControl [
-                Daisy.label [Daisy.labelText "Email:"]
-                Daisy.input [input.bordered; prop.placeholder "Email"]
+                Daisy.label [
+                    prop.for' "Email"
+                    prop.children [
+                        Daisy.labelText "Email:"
+                        ]
+                    ]
+                Daisy.input [
+                        input.bordered
+                        prop.placeholder "Email"
+                        prop.value state.Member.Email
+                        prop.onChange (fun v ->
+                            {state.Member with Email = v} |> FormChanged |> dispatch
+                        )
+                ]
             ]
 
         ]
@@ -115,7 +139,19 @@ let private genresRow state dispatch =
                     Daisy.formControl [
                         Daisy.label [
                         Daisy.labelText "Umění"
-                        Daisy.checkbox []
+                        Daisy.checkbox [
+                            prop.isChecked (state.Member.PreferredGenres |> List.contains Genre.Art)
+                            prop.onChange (fun isChecked ->
+                                let newValue =
+                                    if isChecked then
+                                        Genre.Art :: state.Member.PreferredGenres
+                                        |> List.distinct
+                                    else
+                                        state.Member.PreferredGenres
+                                        |> List.filter (fun i -> i <> Genre.Art)
+                                { state.Member with PreferredGenres = newValue } |> FormChanged |> dispatch
+                            )
+                        ]
                         ]
                     ]
                     Daisy.formControl [
