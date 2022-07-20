@@ -6,6 +6,7 @@ open Feliz
 open Feliz.UseElmish
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
+open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Shared.Domain
 
 type Model = {
@@ -25,8 +26,8 @@ let init () =
           Name  = ""
           Surname = ""
           Email = ""
-          PreferredGenres = List.empty
-          MemberReservations = ""
+          PreferredGenres = List.empty<Genre>
+          MemberReservations = "0"
       }
       IsValid = false
     }, Cmd.none
@@ -51,7 +52,7 @@ let private inputRow state dispatch =
         prop.children [
             Daisy.formControl [
                 Daisy.label [
-                    prop.for' "name"
+                    prop.for' "Name"
                     prop.children [
                         Daisy.labelText "Jméno:"
                     ]
@@ -59,7 +60,7 @@ let private inputRow state dispatch =
                 Daisy.input [
                     input.bordered
                     prop.placeholder "Jméno"
-                    prop.name "name"
+                    prop.name "Name"
                     prop.value state.Member.Name
                     prop.onChange (fun v ->
                         { state.Member with Name = v } |> FormChanged |> dispatch
