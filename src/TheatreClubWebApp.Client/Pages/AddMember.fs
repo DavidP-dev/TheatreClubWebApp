@@ -259,7 +259,7 @@ let private genresRow state dispatch =
                             prop.onChange (fun isChecked ->
                                 let newValue =
                                     if isChecked then
-                                        Genre.Dance :: state.Member.PreferredGenres
+                                        Genre.Philosophy :: state.Member.PreferredGenres
                                         |> List.distinct
                                     else
                                         state.Member.PreferredGenres
