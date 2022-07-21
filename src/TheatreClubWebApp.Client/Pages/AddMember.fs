@@ -38,7 +38,7 @@ let update msg (state: Model) =
     | FormSubmitted ->
 
         state, Cmd.OfAsync.perform service.SaveClubMember state.Member (fun _ -> FormSaved)
-    | FormSaved -> state,Cmd.none
+    | FormSaved -> state, Page.Members |> Cmd.navigatePage
 
 let private alertRow =
     Daisy.alert [
@@ -309,6 +309,7 @@ let AddMemberView () =
                                 button.primary
                                 button.lg
                                 prop.value "Přidej člena"
+
                             ]
                         ]
                     ]

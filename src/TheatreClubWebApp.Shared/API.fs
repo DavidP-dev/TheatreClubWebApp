@@ -12,6 +12,7 @@ with
 
 type PerformancesService = {
     GetPerformances : unit -> Async<Performance list>
+    SavePerformance : Performance -> Async<Performance>
 }
 with
     static member RouteBuilder _ m = sprintf "/api/performances/%s" m
