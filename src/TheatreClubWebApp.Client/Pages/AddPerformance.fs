@@ -166,7 +166,7 @@ let private genresInfo =
         prop.text "Kliknutím vyber žánry představení:"
         ]
 
-let private genresRow =
+let private genresRow state dispatch =
     Html.div [
         prop.className "flex flex-row gap-12"
         prop.children [
@@ -177,26 +177,74 @@ let private genresRow =
                 prop.children [
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Alterna"
-                        Daisy.checkbox []
+                            Daisy.labelText "Alterna"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Alternative)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Alternative :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Alternative)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Umění"
-                        Daisy.checkbox []
+                            Daisy.labelText "Umění"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Art)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Art :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Art)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Komedie"
-                        Daisy.checkbox []
+                            Daisy.labelText "Komedie"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Comedy)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Comedy :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Comedy)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Tanec"
-                        Daisy.checkbox []
+                            Daisy.labelText "Tanec"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Dance)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Dance :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Dance)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                 ]
@@ -207,26 +255,74 @@ let private genresRow =
                 prop.children [
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Drama"
-                        Daisy.checkbox []
+                            Daisy.labelText "Drama"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Drama)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Drama :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Drama)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Mejnstrým"
-                        Daisy.checkbox []
+                            Daisy.labelText "Mejnstrým"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Mainstream)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Mainstream :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Mainstream)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
-                        Daisy.labelText "Muzikál"
-                        Daisy.checkbox []
+                            Daisy.labelText "Muzikál"
+                            Daisy.checkbox [
+                                prop.isChecked (state.Perf.Genres |> List.contains Genre.Musical)
+                                prop.onChange (fun isChecked ->
+                                    let newValue =
+                                        if isChecked then
+                                            Genre.Musical :: state.Perf.Genres
+                                            |> List.distinct
+                                        else
+                                            state.Perf.Genres
+                                            |> List.filter (fun i -> i <> Genre.Musical)
+                                    { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                     Daisy.formControl [
                         Daisy.label [
                         Daisy.labelText "Filosofie"
-                        Daisy.checkbox []
+                        Daisy.checkbox [
+                            prop.isChecked (state.Perf.Genres |> List.contains Genre.Philosophy)
+                            prop.onChange (fun isChecked ->
+                                let newValue =
+                                    if isChecked then
+                                        Genre.Philosophy :: state.Perf.Genres
+                                        |> List.distinct
+                                    else
+                                        state.Perf.Genres
+                                        |> List.filter (fun i -> i <> Genre.Philosophy)
+                                { state.Perf with Genres = newValue } |> FormChanged |> dispatch
+                                )
+                            ]
                         ]
                     ]
                 ]
@@ -244,8 +340,8 @@ let AddPerformanceView () =
     Html.form [
         prop.onSubmit (fun e ->
                 e.preventDefault()
-                let memberId = Guid.NewGuid()
-                let msg = "form sent" + memberId.ToString()
+                let performanceId = Guid.NewGuid()
+                let msg = "form sent" + performanceId.ToString()
                 Fable.Core.JS.console.log(sprintf "%A" state)
                 FormSubmitted |> dispatch)
 
@@ -257,7 +353,7 @@ let AddPerformanceView () =
                     alertRow
                     inputRow state dispatch
                     genresInfo
-                    genresRow
+                    genresRow state dispatch
 
 
                     Html.div [
