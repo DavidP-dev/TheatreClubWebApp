@@ -36,7 +36,7 @@ type Performance =
         DateAndTime: DateTimeOffset
         NumberOfTickets : string
         Reservations : string
-        Cost : int
+        Cost : string
         Genres : Genre list
     }
 

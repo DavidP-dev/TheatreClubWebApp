@@ -5,6 +5,7 @@ open Elmish
 open Feliz
 open Feliz.UseElmish
 open Feliz.DaisyUI
+open Microsoft.FSharp.Core
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Shared.Domain
@@ -25,24 +26,32 @@ let init () =
             Id = Guid.NewGuid()
             Title = ""
             Theatre = ""
-            DateAndTime = DateTimeOffset.Now
+            DateAndTime = DateTimeOffset.MinValue
             NumberOfTickets = ""
             Reservations = "0"
-            Cost = 0
+            Cost = "0"
             Genres = List.empty<Genre>
         }
         IsValid = false
     }, Cmd.none
 
+let private validate (m:Performance) = true
 
 let update msg (state: Model) =
     match msg with
-    | FormChanged m -> { state with Perf = m }, Cmd.none
+    | FormChanged m -> { state with Perf = m; IsValid = validate m }, Cmd.none
     | FormSubmitted ->
-
-        state, Cmd.OfAsync.perform serviceP.SavePerformance state.Perf (fun _ -> FormSaved)
+        let nextCmd =
+            if state.IsValid then Cmd.OfAsync.perform serviceP.SavePerformance state.Perf (fun _ -> FormSaved)
+            else Cmd.none
+        state, nextCmd
     | FormSaved -> state, Page.Performances |> Cmd.navigatePage
 
+
+let stringDateTimeToDayTimeOffSet (s:string) =
+    match s |> DateTimeOffset.TryParse with
+    | true, value -> value
+    | false, _ -> DateTimeOffset.MinValue
 
 let private alertRow =
     Daisy.alert [
@@ -65,7 +74,7 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Název představení"
                     prop.name "Title"
-                    prop.value state.Perf.Title
+                    prop.defaultValue state.Perf.Title
                     prop.onChange (fun v ->
                         { state.Perf with Title = v } |> FormChanged |> dispatch
                     )
@@ -103,9 +112,9 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Datum a čas představení"
                     prop.name "DateAndTime"
-                    prop.value state.Perf.DateAndTime
+                    prop.defaultValue ""
                     prop.onChange (fun v ->
-                        { state.Perf with DateAndTime = v } |> FormChanged |> dispatch
+                        { state.Perf with DateAndTime = stringDateTimeToDayTimeOffSet v  } |> FormChanged |> dispatch
                     )
                 ]
             ]
@@ -122,7 +131,7 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Počet vstupenek"
                     prop.name "NumberOfTickets"
-                    prop.value state.Perf.NumberOfTickets
+                    prop.defaultValue state.Perf.NumberOfTickets
                     prop.onChange (fun v ->
                         { state.Perf with NumberOfTickets = v } |> FormChanged |> dispatch
                     )
@@ -140,10 +149,11 @@ let private inputRow state dispatch =
                 Daisy.input [
                     input.bordered
                     prop.placeholder "Cena stupenky"
+                    //prop.type'.number
                     prop.name "Cost"
-                    prop.value state.Perf.Cost
+                    prop.defaultValue state.Perf.Cost
                     prop.onChange (fun v ->
-                        { state.Perf with Cost = v } |> FormChanged |> dispatch
+                        { state.Perf with Cost = v} |> FormChanged |> dispatch
                     )
                 ]
             ]
@@ -232,23 +242,33 @@ let AddPerformanceView () =
     let state, dispatch = React.useElmish(init, update, [||])
 
     Html.form [
-        Html.div [
-            prop.className "flex flex-col items-center gap-4 mx-14"
-            prop.children [
+        prop.onSubmit (fun e ->
+                e.preventDefault()
+                let memberId = Guid.NewGuid()
+                let msg = "form sent" + memberId.ToString()
+                Fable.Core.JS.console.log(sprintf "%A" state)
+                FormSubmitted |> dispatch)
 
-                alertRow
-                inputRow state dispatch
-                genresInfo
-                genresRow
+        prop.children [
+            Html.div [
+                prop.className "flex flex-col items-center gap-4 mx-14"
+                prop.children [
+
+                    alertRow
+                    inputRow state dispatch
+                    genresInfo
+                    genresRow
 
 
-                Html.div [
+                    Html.div [
 
-                    Daisy.button.button [
-                        button.outline
-                        button.primary
-                        button.lg
-                        prop.text "Přidej představení"
+                        Daisy.button.button [
+                            button.outline
+                            button.primary
+                            button.lg
+                            //prop.disabled (not state.IsValid)
+                            prop.text "Přidej představení"
+                        ]
                     ]
                 ]
             ]

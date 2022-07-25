@@ -19,6 +19,7 @@ with
 
 type ReservationsService = {
     GetReservations : unit -> Async<Reservation list>
+    SaveReservation : Reservation -> Async<Reservation>
 }
 with
     static member RouteBuilder _ m = sprintf "/api/reservations/%s" m

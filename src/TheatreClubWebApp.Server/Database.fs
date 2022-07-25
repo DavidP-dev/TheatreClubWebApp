@@ -133,7 +133,7 @@ module PerformancesDB =
         DateAndTime = db.DateAndTime
         NumberOfTickets = db.NumberOfTickets |> string
         Reservations = db.Reservations |> string
-        Cost = db.Cost
+        Cost = db.Cost |> string
         Genres =  db.Genres.Split(",") |> Array.map MembersDb.parseGenre |> List.ofArray
         }
 
@@ -144,7 +144,7 @@ module PerformancesDB =
         DateAndTime = dm.DateAndTime
         NumberOfTickets = dm.NumberOfTickets |> int
         Reservations = dm.Reservations |> int
-        Cost = dm.Cost
+        Cost = dm.Cost |> int
         Genres = dm.Genres |> List.map MembersDb.genreToString |> (fun x -> String.Join(",", x))}
 
 module ReservationDB =
