@@ -28,8 +28,8 @@ let init () =
             Theatre = ""
             DateAndTime = DateTimeOffset.MinValue
             NumberOfTickets = ""
-            Reservations = "0"
-            Cost = "0"
+            Reservations = ""
+            Cost = ""
             Genres = List.empty<Genre>
         }
         IsValid = false
@@ -327,8 +327,6 @@ let private genresRow state dispatch =
                     ]
                 ]
             ]
-
-
         ]
     ]
 

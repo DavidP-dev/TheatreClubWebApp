@@ -115,7 +115,6 @@ let private genresRow state dispatch =
         prop.className "flex flex-row gap-12"
         prop.children [
 
-            // left col
             Html.div [
                 prop.className "flex flex-col w-32"
                 prop.children [
