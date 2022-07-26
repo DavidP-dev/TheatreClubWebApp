@@ -26,9 +26,9 @@ let init () =
             Id = Guid.NewGuid()
             Title = ""
             Theatre = ""
-            DateAndTime = DateTimeOffset.MinValue
+            DateAndTime = ""
             NumberOfTickets = ""
-            Reservations = ""
+            Reservations = "0"
             Cost = ""
             Genres = List.empty<Genre>
         }
@@ -114,7 +114,7 @@ let private inputRow state dispatch =
                     prop.name "DateAndTime"
                     prop.defaultValue ""
                     prop.onChange (fun v ->
-                        { state.Perf with DateAndTime = stringDateTimeToDayTimeOffSet v  } |> FormChanged |> dispatch
+                        { state.Perf with DateAndTime = v  } |> FormChanged |> dispatch
                     )
                 ]
             ]

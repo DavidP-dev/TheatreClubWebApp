@@ -33,7 +33,7 @@ type Performance =
         Id : Guid
         Title : string
         Theatre : string
-        DateAndTime: DateTimeOffset
+        DateAndTime: string
         NumberOfTickets : string
         Reservations : string
         Cost : string

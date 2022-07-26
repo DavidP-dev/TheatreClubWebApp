@@ -3,6 +3,7 @@ module TheatreClubWebApp.Server.Database
 
 open System
 open System.Data
+open System.Globalization
 open TheatreClubWebApp.Shared.Domain
 
 open Dapper.FSharp
@@ -56,9 +57,16 @@ type ReservationDB =
 
 // Modules for transferring data from database layer to domain layer and opposite
 module Transfers =
-    let dateTimeToString (dateTime: DateTimeOffset) :string =
-        let dateTimeString = dateTime.ToString()
-        dateTimeString
+    let dateTimeOffsetToString (dto:DateTimeOffset) :string =
+        let dateTimeOffsetString = dto.ToString("dd.MM.yyyy HH:mm")
+        dateTimeOffsetString
+
+    let tryStringToDateTimeOffset (s:string) :DateTimeOffset =
+        let convertedDateTimeExact = DateTimeOffset.TryParseExact(s, "dd.MM.yyyy HH:mm", CultureInfo("es-CZ", false), DateTimeStyles.AssumeLocal)
+        match convertedDateTimeExact with
+            |true, value -> value
+            |false, _  -> DateTimeOffset.MinValue
+
     let boolToString (b:bool) :string =
         let stringFromBool =
             match b with
@@ -72,6 +80,7 @@ module Transfers =
             | "Ne" -> false
             | _ -> failwith $"Možnost -{s}-neexistuje!!!"
         boolFromString
+
 module MembersDb =
     let parseGenre (gn :string) : Genre =
         match gn with
@@ -130,7 +139,7 @@ module PerformancesDB =
         Id = db.Id
         Title = db.Title
         Theatre = db.Theatre
-        DateAndTime = db.DateAndTime
+        DateAndTime = db.DateAndTime |> Transfers.dateTimeOffsetToString
         NumberOfTickets = db.NumberOfTickets |> string
         Reservations = db.Reservations |> string
         Cost = db.Cost |> string
@@ -141,7 +150,7 @@ module PerformancesDB =
         Id = dm.Id
         Title = dm.Title
         Theatre = dm.Theatre
-        DateAndTime = dm.DateAndTime
+        DateAndTime = dm.DateAndTime |> Transfers.tryStringToDateTimeOffset
         NumberOfTickets = dm.NumberOfTickets |> int
         Reservations = dm.Reservations |> int
         Cost = dm.Cost |> int
@@ -203,10 +212,11 @@ let tryGetMemberByEmail (conn:IDbConnection) (email:string) =
 
 // Checks existence of performance in database
 let tryGetPerformanceByTitleAndDate (conn:IDbConnection) (performance:Performance) =
+    let parsedPerformance = performance.DateAndTime |> Transfers.tryStringToDateTimeOffset
     let vysl =
         select {
             for p in performancesTable do
-            where (p.Title = performance.Title && p.DateAndTime = performance.DateAndTime)}
+            where (p.Title = performance.Title && p.DateAndTime = parsedPerformance)}
         |> conn.SelectAsync<PerformanceDB>
 
     let v = vysl.Result

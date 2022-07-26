@@ -21,7 +21,7 @@ let PerformancesView () =
             |> List.map ( fun p ->
                 Html.tr [
                     Html.td p.Title
-                    Html.td (p.DateAndTime.ToString("dd.MM.YYYY hh:mm"))
+                    Html.td p.DateAndTime
                     Html.td p.NumberOfTickets
                     Html.td p.Reservations
                     Html.td "Editovat / Smazat"
