@@ -50,7 +50,7 @@ type Reservation =
         PerformanceId : Guid
         Theatre : string
         PerformanceTitle : string
-        PerformanceDateAndTime : DateTimeOffset
+        PerformanceDateAndTime : string
         NumberOfTickets : string
         IsPaid : string
         TicketsReceived : string

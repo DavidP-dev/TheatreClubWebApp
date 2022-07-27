@@ -1,9 +1,40 @@
 module TheatreClubWebApp.Client.Pages.AddReservation
 
 open System
+open Elmish
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
+open TheatreClubWebApp.Shared.Domain
+
+type Model = {
+    Res : Reservation
+    IsValid : bool
+}
+
+type Msg =
+   | FormChanged of Reservation
+   | FormSubmitted
+   | FormSaved
+
+let init () =
+    {
+        Res = {
+            ReservationID = Guid.NewGuid()
+            MemberId = Guid.NewGuid()
+            MemberName = ""
+            MemberSurname = ""
+            PerformanceId = Guid.NewGuid()
+            Theatre = ""
+            PerformanceTitle = ""
+            PerformanceDateAndTime = DateTimeOffset.MinValue
+            NumberOfTickets = ""
+            IsPaid = ""
+            TicketsReceived = ""
+        }
+        IsValid = false
+    }, Cmd.none
+
 
 let private alertRow =
     Daisy.alert [
