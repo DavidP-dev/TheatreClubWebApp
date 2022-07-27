@@ -43,6 +43,7 @@ let update msg (state: Model) =
 let private alertRow =
     Daisy.alert [
         alert.info
+        prop.className "justify-center"
         prop.text "Pro přidání člena vyplň níže zobrazený formulář:"
     ]
 
@@ -107,6 +108,7 @@ let private inputRow state dispatch =
 let private genresInfo =
     Daisy.alert [
         alert.info
+        prop.className "justify-center"
         prop.text "Kliknutím vyber preferované žánry:"
         ]
 

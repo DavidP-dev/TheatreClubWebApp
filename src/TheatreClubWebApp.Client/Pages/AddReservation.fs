@@ -8,83 +8,85 @@ open TheatreClubWebApp.Client.Server
 let private alertRow =
     Daisy.alert [
         alert.info
-        prop.text "Pro přidání rezervace vyber z níže uvedených možností:"
+        prop.className "justify-center"
+        prop.text "Pro přidání rezervace vyplň níže vyobrazený formulář."
     ]
 
 let private selectRow =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Vyber rezervující osobu"
-                    Html.option "Dvořáčková Petra"
-                    Html.option "Ferjentsik Karel"
-                    Html.option "Pícha David"
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Vyber obědnávajícího"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Dvořáčková Petra"]]
+                        Html.li [Html.a [prop.text "Ferjentsik Karel"]]
+                        Html.li [Html.a [prop.text "Konášová Linda"]]
+                        Html.li [Html.a [prop.text "Pícha David"]]
+                    ]
                 ]
             ]
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Vyber divadlo"
-                    Html.option "A Studio Rubín"
-                    Html.option "Divadlo pod Palmovkou"
-                    Html.option "Jatka 78"
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Vyber divadlo"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
+                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
+                        Html.li [Html.a [prop.text ""]]
+                    ]
+                ]
+            ]
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Vyber divadelní představení"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
+                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
+                        Html.li [Html.a [prop.text ""]]
+                    ]
+                ]
+            ]
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Vyber čas představení"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
+                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
+                        Html.li [Html.a [prop.text ""]]
+                    ]
                 ]
             ]
         ]
     ]
 
-let private selectRow2 =
-    Html.div [
-        prop.className "flex flex-row gap-4"
-        prop.children [
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Vyber představení"
-                    Html.option "Federer a Nadal"
-                    Html.option "Hubte skauty"
-                    Html.option "Pérák"
-                ]
-            ]
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Vyber datum a čas představení"
-                    Html.option "10 10 2022 18:00"
-                    Html.option "11 12 2022 18:00 "
-
-                ]
-            ]
-        ]
-    ]
-
-
-
-let private inputInfo =
-    Daisy.alert [
-        alert.info
-        prop.text "Zadej počet vstupenek:"
-        ]
-
-let private selectInfo2 =
-    Daisy.alert [
-        alert.info
-        prop.text "Vyber z níže uvedených možností"
-        ]
 
 let private inputRow =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
             Daisy.formControl [
-                Daisy.label [Daisy.labelText "Počet vstupenek:"]
+                Daisy.label [Daisy.labelText "Zadej počet vstupenek:"]
                 Daisy.input [input.bordered; prop.placeholder "Počet vstupenek"]
             ]
         ]
@@ -94,23 +96,32 @@ let private selectRow3 =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Jsou vstupenky zaplaceny?"
-                    Html.option "Vstupenky JSOU ZAPLACENY."
-                    Html.option "Vstupenky NEJSOU ZAPLACENY."
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Jsou vstupenky zaplaceny?"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Vstupenky JSOU ZAPLACENY."]]
+                        Html.li [Html.a [prop.text "Vstupenky NEJSOU ZAPLACENY."]]
+                    ]
                 ]
             ]
-            Daisy.select [
-                select.bordered
-                prop.className "w-full max-w-xs"
-                prop.children [
-                    Html.option "Byly vstupenky doručeny?"
-                    Html.option "Vstupenky BYLY DORUČENY."
-                    Html.option "11 12 2022 18:00 "
-
+            Daisy.dropdown [
+                Daisy.button.button [
+                    button.primary
+                    prop.text "Jsou vstupenky doručeny?"
+                ]
+                Daisy.dropdownContent [
+                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                    prop.tabIndex 0
+                    prop.children [
+                        Html.li [Html.a [prop.text "Vstupenky JSOU DORUČENY."]]
+                        Html.li [Html.a [prop.text "Vstupenky NEJSOU DORUČENY."]]
+                    ]
                 ]
             ]
         ]
@@ -125,10 +136,7 @@ let AddReservationView () =
 
             alertRow
             selectRow
-            selectRow2
-            inputInfo
             inputRow
-            selectInfo2
             selectRow3
 
 
@@ -138,7 +146,7 @@ let AddReservationView () =
                     button.outline
                     button.primary
                     button.lg
-                    prop.text "Přidej představení"
+                    prop.text "Přidej rezervaci"
                 ]
             ]
         ]
