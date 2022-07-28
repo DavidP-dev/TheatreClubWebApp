@@ -3,16 +3,19 @@ module TheatreClubWebApp.Client.Pages.AddReservation
 open System
 open Elmish
 open Feliz
+open Feliz.UseElmish
 open Feliz.DaisyUI
+open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Shared.Domain
 
-type Model = {
+// Adding reservation
+type ModelR = {
     Res : Reservation
     IsValid : bool
 }
 
-type Msg =
+type MsgR =
    | FormChanged of Reservation
    | FormSubmitted
    | FormSaved
@@ -33,6 +36,27 @@ let init () =
         }
         IsValid = false
     }, Cmd.none
+
+let private validate (r:Reservation) = true
+
+let update msgR (state: ModelR) =
+    match msgR with
+    | FormChanged r -> { state with Res = r; IsValid = validate r }, Cmd.none
+    | FormSubmitted ->
+        let nextCmd =
+            if state.IsValid then Cmd.OfAsync.perform serviceR.SaveReservation state.Res (fun _ -> FormSaved)
+            else Cmd.none
+        state, nextCmd
+    | FormSaved -> state, Page.Reservations |> Cmd.navigatePage
+
+let stringDateTimeToDayTimeOffSet (s:string) =
+    match s |> DateTimeOffset.TryParse with
+    | true, value -> value
+    | false, _ -> DateTimeOffset.MinValue
+
+// Update Reservation label in ClubMember Type - to do
+
+// Update Reservations label in Performance Type - to do
 
 
 let private alertRow =
@@ -80,13 +104,26 @@ let private selectRow (mem:ClubMember list) (perf:Performance list)=
     ]
 
 
-let private inputRow =
+let private inputRow state dispatch =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
             Daisy.formControl [
-                Daisy.label [Daisy.labelText "Zadej počet vstupenek:"]
-                Daisy.input [input.bordered; prop.placeholder "Počet vstupenek"]
+                Daisy.label [
+                    prop.for' "NumberOFTickets"
+                    prop.children [
+                        Daisy.labelText "Zadej počet vstupenek:"
+                    ]
+                ]
+                Daisy.input [
+                    input.bordered
+                    prop.placeholder "Počet vstupenek"
+                    prop.name "NumberOfTickets"
+                    prop.defaultValue state.Res.NumberOfTickets
+                    prop.onChange (fun v ->
+                        { state.Res with NumberOfTickets = v } |> FormChanged |> dispatch
+                    )
+                ]
             ]
         ]
     ]
@@ -148,24 +185,39 @@ let AddReservationView () =
     }
     React.useEffectOnce(loadPerformances >> Async.StartImmediate)
 
+// Saving reservation
+    let state, dispatch = React.useElmish(init, update, [||])
+
 // Page layout
-    Html.div [
-        prop.className "flex flex-col items-center gap-4 mx-14"
+
+    Html.form [
+        prop.onSubmit (fun e ->
+                e.preventDefault()
+                let reservationId = Guid.NewGuid()
+                let msg = "form sent" + reservationId.ToString()
+                Fable.Core.JS.console.log(sprintf "%A" state)
+                FormSubmitted |> dispatch)
+
         prop.children [
-
-            alertRow
-            selectRow members performances
-            inputRow
-            selectRow3
-
-
             Html.div [
+                prop.className "flex flex-col items-center gap-4 mx-14"
+                prop.children [
 
-                Daisy.button.button [
-                    button.outline
-                    button.primary
-                    button.lg
-                    prop.text "Přidej rezervaci"
+                    alertRow
+                    selectRow members performances
+                    inputRow state dispatch
+                    selectRow3
+
+
+                    Html.div [
+
+                        Daisy.button.button [
+                            button.outline
+                            button.primary
+                            button.lg
+                            prop.text "Přidej rezervaci"
+                        ]
+                    ]
                 ]
             ]
         ]
