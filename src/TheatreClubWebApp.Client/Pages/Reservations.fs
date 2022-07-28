@@ -20,7 +20,7 @@ let ReservationsView () =
             |> List.map (fun r ->
                 Html.tr [
                     Html.td r.PerformanceTitle
-                    Html.td (r.PerformanceDateAndTime.ToString("dd.MM.YYYY hh:mm"))
+                    Html.td r.PerformanceDateAndTime
                     Html.td (r.MemberName + " " +  r.MemberSurname)
                     Html.td (r.IsPaid.ToString())
                     Html.td (r.TicketsReceived.ToString())
