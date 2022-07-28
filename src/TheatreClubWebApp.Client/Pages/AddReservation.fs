@@ -43,23 +43,23 @@ let private alertRow =
         prop.text "Pro přidání rezervace vyplň níže vyobrazený formulář."
     ]
 
-let private selectRow =
+let private selectRow (mem:ClubMember list) =
+
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
             Daisy.dropdown [
                 Daisy.button.button [
                     button.primary
-                    prop.text "Vyber obědnávajícího"
+                    prop.text "Vyber objednávajícího"
                 ]
                 Daisy.dropdownContent [
                     prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
                     prop.tabIndex 0
                     prop.children [
-                        Html.li [Html.a [prop.text "Dvořáčková Petra"]]
-                        Html.li [Html.a [prop.text "Ferjentsik Karel"]]
-                        Html.li [Html.a [prop.text "Konášová Linda"]]
-                        Html.li [Html.a [prop.text "Pícha David"]]
+                        for m in mem ->
+                            Html.li [Html.a [prop.text (m.Surname + " " + m.Name)]]
+
                     ]
                 ]
             ]
@@ -161,12 +161,20 @@ let private selectRow3 =
 [<ReactComponent>]
 
 let AddReservationView () =
+    let members, setMembers = React.useState(List.empty)
+
+    let loadMembers () = async {
+        let! members = service.GetClubMembers()
+        setMembers members
+    }
+    React.useEffectOnce(loadMembers >> Async.StartImmediate)
+
     Html.div [
         prop.className "flex flex-col items-center gap-4 mx-14"
         prop.children [
 
             alertRow
-            selectRow
+            selectRow members
             inputRow
             selectRow3
 

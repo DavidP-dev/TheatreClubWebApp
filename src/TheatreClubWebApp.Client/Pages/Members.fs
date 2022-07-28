@@ -18,6 +18,7 @@ let private toCzech (genre: Genre) : string =
         | Musical -> "Muzikál"
         | Philosophy -> "Filosofie"
 
+
 [<ReactComponent>]
 let MembersView () =
         let members, setMembers = React.useState(List.empty)

@@ -292,6 +292,7 @@ let returnAllClubMembersFromDb (conn:IDbConnection) =
             select {
                 for m in membersTable do
                 selectAll
+                orderBy m.Surname
                 }
             |> conn.SelectAsync<MemberDB>
 
@@ -305,6 +306,7 @@ let returnAllPerformancesFromDb (conn:IDbConnection) =
             select {
                 for p in performancesTable do
                 selectAll
+                orderBy p.Title
                 }
             |> conn.SelectAsync<PerformanceDB>
 
