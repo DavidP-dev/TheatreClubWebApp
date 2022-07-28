@@ -32,7 +32,6 @@ type PerformanceDB =
     {
         Id : Guid
         Title : string
-        Theatre : string
         DateAndTime: DateTimeOffset
         NumberOfTickets : int
         Reservations : int
@@ -47,7 +46,6 @@ type ReservationDB =
         MemberName : string
         MemberSurname: string
         PerformanceId : Guid
-        Theatre : string
         PerformanceTitle : string
         PerformanceDateAndTime : DateTimeOffset
         NumberOfTickets : int
@@ -138,7 +136,6 @@ module PerformancesDB =
     let toDomain (db:PerformanceDB) : Performance = {
         Id = db.Id
         Title = db.Title
-        Theatre = db.Theatre
         DateAndTime = db.DateAndTime |> Transfers.dateTimeOffsetToString
         NumberOfTickets = db.NumberOfTickets |> string
         Reservations = db.Reservations |> string
@@ -149,7 +146,6 @@ module PerformancesDB =
     let toDatabase (dm:Performance) : PerformanceDB = {
         Id = dm.Id
         Title = dm.Title
-        Theatre = dm.Theatre
         DateAndTime = dm.DateAndTime |> Transfers.tryStringToDateTimeOffset
         NumberOfTickets = dm.NumberOfTickets |> int
         Reservations = dm.Reservations |> int
@@ -163,7 +159,6 @@ module ReservationDB =
         MemberName = db.MemberName
         MemberSurname = db.MemberSurname
         PerformanceId = db.PerformanceId
-        Theatre = db.Theatre
         PerformanceTitle = db.PerformanceTitle
         PerformanceDateAndTime = db.PerformanceDateAndTime |> Transfers.dateTimeOffsetToString
         NumberOfTickets = db.NumberOfTickets |> string
@@ -176,7 +171,6 @@ module ReservationDB =
         MemberName = dm.MemberName
         MemberSurname = dm.MemberSurname
         PerformanceId = dm.PerformanceId
-        Theatre = dm.Theatre
         PerformanceTitle = dm.PerformanceTitle
         PerformanceDateAndTime = dm.PerformanceDateAndTime |> Transfers.tryStringToDateTimeOffset
         NumberOfTickets = dm.NumberOfTickets |> int

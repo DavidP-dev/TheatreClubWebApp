@@ -25,7 +25,6 @@ let init () =
             MemberName = ""
             MemberSurname = ""
             PerformanceId = Guid.NewGuid()
-            Theatre = ""
             PerformanceTitle = ""
             PerformanceDateAndTime = ""
             NumberOfTickets = ""
@@ -43,7 +42,7 @@ let private alertRow =
         prop.text "Pro přidání rezervace vyplň níže vyobrazený formulář."
     ]
 
-let private selectRow (mem:ClubMember list) =
+let private selectRow (mem:ClubMember list) (perf:Performance list)=
 
     Html.div [
         prop.className "flex flex-row gap-4"
@@ -66,45 +65,14 @@ let private selectRow (mem:ClubMember list) =
             Daisy.dropdown [
                 Daisy.button.button [
                     button.primary
-                    prop.text "Vyber divadlo"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
-                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
-                        Html.li [Html.a [prop.text ""]]
-                    ]
-                ]
-            ]
-            Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
                     prop.text "Vyber divadelní představení"
                 ]
                 Daisy.dropdownContent [
                     prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
                     prop.tabIndex 0
                     prop.children [
-                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
-                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
-                        Html.li [Html.a [prop.text ""]]
-                    ]
-                ]
-            ]
-            Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
-                    prop.text "Vyber čas představení"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        Html.li [Html.a [prop.text "Divadlo s nejdelším názvem v Praze"]]
-                        Html.li [Html.a [prop.text "Nejkrásnější divadlo"]]
-                        Html.li [Html.a [prop.text ""]]
+                        for p in perf ->
+                            Html.li [Html.a [prop.text (p.Title + " " + p.DateAndTime)]]
                     ]
                 ]
             ]
@@ -161,6 +129,8 @@ let private selectRow3 =
 [<ReactComponent>]
 
 let AddReservationView () =
+
+// Load ClubMember list for dropdown menu
     let members, setMembers = React.useState(List.empty)
 
     let loadMembers () = async {
@@ -169,12 +139,22 @@ let AddReservationView () =
     }
     React.useEffectOnce(loadMembers >> Async.StartImmediate)
 
+// Load Performances list for dropdown menu
+    let performances, setPerformances = React.useState(List.Empty)
+
+    let loadPerformances () = async {
+        let! performances = serviceP.GetPerformances()
+        setPerformances performances
+    }
+    React.useEffectOnce(loadPerformances >> Async.StartImmediate)
+
+// Page layout
     Html.div [
         prop.className "flex flex-col items-center gap-4 mx-14"
         prop.children [
 
             alertRow
-            selectRow members
+            selectRow members performances
             inputRow
             selectRow3
 

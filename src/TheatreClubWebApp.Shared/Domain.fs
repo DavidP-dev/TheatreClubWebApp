@@ -32,7 +32,6 @@ type Performance =
     {
         Id : Guid
         Title : string
-        Theatre : string
         DateAndTime: string
         NumberOfTickets : string
         Reservations : string
@@ -48,7 +47,6 @@ type Reservation =
         MemberName : string
         MemberSurname : String
         PerformanceId : Guid
-        Theatre : string
         PerformanceTitle : string
         PerformanceDateAndTime : string
         NumberOfTickets : string
