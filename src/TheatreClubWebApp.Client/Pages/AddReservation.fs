@@ -12,11 +12,15 @@ open TheatreClubWebApp.Shared.Domain
 // Adding reservation
 type ModelR = {
     Res : Reservation
+    SelectedMember : ClubMember option
+    SelectedPerformance : Performance option
     IsValid : bool
 }
 
 type MsgR =
    | FormChanged of Reservation
+   | MemberSelected of ClubMember
+   | PerformanceSelected of Performance
    | FormSubmitted
    | FormSaved
 
@@ -35,6 +39,8 @@ let init () =
             TicketsReceived = ""
         }
         IsValid = false
+        SelectedMember = None
+        SelectedPerformance = None
     }, Cmd.none
 
 let private validate (r:Reservation) = true
@@ -42,6 +48,8 @@ let private validate (r:Reservation) = true
 let update msgR (state: ModelR) =
     match msgR with
     | FormChanged r -> { state with Res = r; IsValid = validate r }, Cmd.none
+    | MemberSelected m -> { state with SelectedMember = Some m }, Cmd.none
+    | PerformanceSelected p -> { state with SelectedPerformance = Some p }, Cmd.none
     | FormSubmitted ->
         let nextCmd =
             if state.IsValid then Cmd.OfAsync.perform serviceR.SaveReservation state.Res (fun _ -> FormSaved)
@@ -66,37 +74,58 @@ let private alertRow =
         prop.text "Pro přidání rezervace vyplň níže vyobrazený formulář."
     ]
 
-let private selectRow (mem:ClubMember list) (perf:Performance list)=
+let private selectRow (mem:ClubMember list) (perf:Performance list) (state:ModelR) dispatch =
 
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
             Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
-                    prop.text "Vyber objednávajícího"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        for m in mem ->
-                            Html.li [Html.a [prop.text (m.Surname + " " + m.Name)]]
-
+                prop.children [
+                    Daisy.button.button [
+                        button.primary
+                        match state.SelectedMember with
+                        | Some m -> prop.text ("Objednávajcí: " + m.Surname + " " + m.Name)
+                        | None -> prop.text "Vyber objednávajícího"
+                    ]
+                    Daisy.dropdownContent [
+                        prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                        prop.tabIndex 0
+                        prop.children [
+                            for m in mem ->
+                                Html.li [
+                                    Html.a [
+                                        prop.text (m.Surname + " " + m.Name)
+                                        prop.onClick (fun ev ->
+                                            ev.preventDefault()
+                                            m |> MemberSelected |> dispatch)
+                                    ]
+                                ]
+                        ]
                     ]
                 ]
             ]
             Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
-                    prop.text "Vyber divadelní představení"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        for p in perf ->
-                            Html.li [Html.a [prop.text (p.Title + " " + p.DateAndTime)]]
+                prop.children [
+                    Daisy.button.button [
+                        button.primary
+                        match state.SelectedPerformance with
+                        | Some p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime )
+                        | None -> prop.text "Vyber divadelní představení"
+                    ]
+                    Daisy.dropdownContent [
+                        prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                        prop.tabIndex 0
+                        prop.children [
+                            for p in perf ->
+                                Html.li [
+                                    Html.a [
+                                        prop.text (p.Title + " " + p.DateAndTime)
+                                        prop.onClick (fun ev ->
+                                            ev.preventDefault()
+                                            p |> PerformanceSelected |> dispatch)
+                                    ]
+                                ]
+                        ]
                     ]
                 ]
             ]
@@ -128,35 +157,66 @@ let private inputRow state dispatch =
         ]
     ]
 
-let private selectRow3 =
+let private selectRow3 state dispatch =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
-            Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
-                    prop.text "Jsou vstupenky zaplaceny?"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        Html.li [Html.a [prop.text "Vstupenky JSOU ZAPLACENY."]]
-                        Html.li [Html.a [prop.text "Vstupenky NEJSOU ZAPLACENY."]]
+            Daisy.formControl [
+                Daisy.dropdown [
+
+                    Daisy.button.button [
+                        button.primary
+                        prop.text "Jsou vstupenky zaplaceny?"
+                    ]
+                    Daisy.dropdownContent [
+                        prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                        prop.tabIndex 0
+                        prop.children [
+                            Html.li [
+                                Html.a [
+                                    prop.text "Vstupenky JSOU ZAPLACENY."
+                                    prop.onClick (fun ev ->
+                                            ev.preventDefault()
+                                            {state.Res with IsPaid = "true" } |> FormChanged |> dispatch)
+                                ]
+                            ]
+                            Html.li [
+                                Html.a [
+                                    prop.text "Vstupenky NEJSOU ZAPLACENY."
+                                    prop.onClick (fun ev ->
+                                        ev.preventDefault()
+                                        {state.Res with IsPaid = "false" } |> FormChanged |> dispatch)
+                                ]
+                            ]
+                        ]
                     ]
                 ]
-            ]
-            Daisy.dropdown [
-                Daisy.button.button [
-                    button.primary
-                    prop.text "Jsou vstupenky doručeny?"
-                ]
-                Daisy.dropdownContent [
-                    prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
-                    prop.tabIndex 0
-                    prop.children [
-                        Html.li [Html.a [prop.text "Vstupenky JSOU DORUČENY."]]
-                        Html.li [Html.a [prop.text "Vstupenky NEJSOU DORUČENY."]]
+                Daisy.dropdown [
+                    Daisy.button.button [
+                        button.primary
+                        prop.text "Jsou vstupenky doručeny?"
+                    ]
+                    Daisy.dropdownContent [
+                        prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
+                        prop.tabIndex 0
+                        prop.children [
+                            Html.li [
+                                Html.a [
+                                    prop.text "Vstupenky JSOU DORUČENY."
+                                    prop.onClick (fun ev ->
+                                            ev.preventDefault()
+                                            {state.Res with TicketsReceived = "true" } |> FormChanged |> dispatch)
+                                ]
+                            ]
+                            Html.li [
+                                Html.a [
+                                    prop.text "Vstupenky NEJSOU DORUČENY."
+                                    prop.onClick (fun ev ->
+                                            ev.preventDefault()
+                                            {state.Res with TicketsReceived = "false" } |> FormChanged |> dispatch)
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -204,9 +264,9 @@ let AddReservationView () =
                 prop.children [
 
                     alertRow
-                    selectRow members performances
+                    selectRow members performances state dispatch
                     inputRow state dispatch
-                    selectRow3
+                    selectRow3 state dispatch
 
 
                     Html.div [
