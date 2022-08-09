@@ -14,6 +14,8 @@ type ModelR = {
     Res : Reservation
     SelectedMember : ClubMember option
     SelectedPerformance : Performance option
+    SelectedIsPaid : bool option
+    SelectedTicketsReceived : bool option
     IsValid : bool
 }
 
@@ -21,6 +23,8 @@ type MsgR =
    | FormChanged of Reservation
    | MemberSelected of ClubMember
    | PerformanceSelected of Performance
+   | IsPaidSelected of bool
+   | TicketReceivedSelected of bool
    | FormSubmitted
    | FormSaved
 
@@ -35,12 +39,14 @@ let init () =
             PerformanceTitle = ""
             PerformanceDateAndTime = ""
             NumberOfTickets = ""
-            IsPaid = ""
-            TicketsReceived = ""
+            IsPaid = false
+            TicketsReceived = false
         }
         IsValid = false
         SelectedMember = None
         SelectedPerformance = None
+        SelectedIsPaid = None
+        SelectedTicketsReceived = None
     }, Cmd.none
 
 let private validate (r:Reservation) = true
@@ -48,8 +54,38 @@ let private validate (r:Reservation) = true
 let update msgR (state: ModelR) =
     match msgR with
     | FormChanged r -> { state with Res = r; IsValid = validate r }, Cmd.none
-    | MemberSelected m -> { state with SelectedMember = Some m }, Cmd.none
-    | PerformanceSelected p -> { state with SelectedPerformance = Some p }, Cmd.none
+    | MemberSelected m -> { state with
+                                SelectedMember = Some m
+                                Res = {
+                                           state.Res with
+                                               MemberId = m.Id
+                                               MemberName = m.Name
+                                               MemberSurname = m.Surname
+                                }
+                            }, Cmd.none
+    | PerformanceSelected p -> { state with
+                                    SelectedPerformance = Some p
+                                    Res = {
+                                            state.Res with
+                                                PerformanceId = p.Id
+                                                PerformanceTitle = p.Title
+                                                PerformanceDateAndTime = p.DateAndTime
+                                            }
+                                    }, Cmd.none
+    | IsPaidSelected s -> { state with
+                                SelectedIsPaid = Some s
+                                Res = {
+                                        state.Res with
+                                            IsPaid = s
+                                        }
+                                }, Cmd.none
+    | TicketReceivedSelected t ->  { state with
+                                        SelectedTicketsReceived = Some t
+                                        Res = {
+                                                state.Res with
+                                                    TicketsReceived = t
+                                                }
+                                        }, Cmd.none
     | FormSubmitted ->
         let nextCmd =
             if state.IsValid then Cmd.OfAsync.perform serviceR.SaveReservation state.Res (fun _ -> FormSaved)
@@ -84,7 +120,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                     Daisy.button.button [
                         button.primary
                         match state.SelectedMember with
-                        | Some m -> prop.text ("Objednávajcí: " + m.Surname + " " + m.Name)
+                        | Some m -> prop.text ("Objednávající: " + m.Surname + " " + m.Name)
                         | None -> prop.text "Vyber objednávajícího"
                     ]
                     Daisy.dropdownContent [
@@ -161,12 +197,16 @@ let private selectRow3 state dispatch =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
-            Daisy.formControl [
-                Daisy.dropdown [
+
+            Daisy.dropdown [
+                prop.children [
 
                     Daisy.button.button [
                         button.primary
-                        prop.text "Jsou vstupenky zaplaceny?"
+                        match state.SelectedIsPaid with
+                            | Some(false) -> prop.text "Vstupenky nejsou zaplaceny"
+                            | Some(true) -> prop.text "Vstupenky jsou zaplaceny"
+                            | None -> prop.text "JSOU VSTUPENKY ZAPLACENY?"
                     ]
                     Daisy.dropdownContent [
                         prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
@@ -177,24 +217,29 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky JSOU ZAPLACENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            {state.Res with IsPaid = "true" } |> FormChanged |> dispatch)
+                                            true |> IsPaidSelected |> dispatch)
                                 ]
                             ]
                             Html.li [
                                 Html.a [
                                     prop.text "Vstupenky NEJSOU ZAPLACENY."
                                     prop.onClick (fun ev ->
-                                        ev.preventDefault()
-                                        {state.Res with IsPaid = "false" } |> FormChanged |> dispatch)
+                                            ev.preventDefault()
+                                            false |> IsPaidSelected |> dispatch)
                                 ]
                             ]
                         ]
                     ]
                 ]
-                Daisy.dropdown [
+            ]
+            Daisy.dropdown [
+                prop.children [
                     Daisy.button.button [
                         button.primary
-                        prop.text "Jsou vstupenky doručeny?"
+                        match state.SelectedTicketsReceived with
+                            | Some(false) -> prop.text "Vstupenky nejsou doručeny"
+                            | Some(true) -> prop.text "Vstupenky jsou doručeny"
+                            | None -> prop.text "JSOU VSTUPENKY DORUČENY?"
                     ]
                     Daisy.dropdownContent [
                         prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
@@ -205,7 +250,7 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky JSOU DORUČENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            {state.Res with TicketsReceived = "true" } |> FormChanged |> dispatch)
+                                            true |> TicketReceivedSelected |> dispatch)
                                 ]
                             ]
                             Html.li [
@@ -213,13 +258,14 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky NEJSOU DORUČENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            {state.Res with TicketsReceived = "false" } |> FormChanged |> dispatch)
+                                            false |> TicketReceivedSelected |> dispatch)
                                 ]
                             ]
                         ]
                     ]
                 ]
             ]
+
         ]
     ]
 

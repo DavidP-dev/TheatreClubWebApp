@@ -5,6 +5,12 @@ open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Client.Router
 
+let boolToHumanLanguage (b:bool) =
+    if b = true then
+        "Ano"
+    else
+        "Ne"
+
 [<ReactComponent>]
 let ReservationsView () =
         let reservations, setReservations = React.useState(List.empty)
@@ -22,8 +28,8 @@ let ReservationsView () =
                     Html.td r.PerformanceTitle
                     Html.td r.PerformanceDateAndTime
                     Html.td (r.MemberName + " " +  r.MemberSurname)
-                    Html.td (r.IsPaid.ToString())
-                    Html.td (r.TicketsReceived.ToString())
+                    Html.td (r.IsPaid |> boolToHumanLanguage)
+                    Html.td (r.TicketsReceived |> boolToHumanLanguage)
                     Html.td "Editovat / Smazat"
                 ]
             )

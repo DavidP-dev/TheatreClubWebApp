@@ -50,7 +50,7 @@ type Reservation =
         PerformanceTitle : string
         PerformanceDateAndTime : string
         NumberOfTickets : string
-        IsPaid : string
-        TicketsReceived : string
+        IsPaid : bool
+        TicketsReceived : bool
     }
 

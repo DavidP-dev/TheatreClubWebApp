@@ -162,8 +162,8 @@ module ReservationDB =
         PerformanceTitle = db.PerformanceTitle
         PerformanceDateAndTime = db.PerformanceDateAndTime |> Transfers.dateTimeOffsetToString
         NumberOfTickets = db.NumberOfTickets |> string
-        IsPaid = db.IsPaid |> Transfers.boolToString
-        TicketsReceived = db.TicketsReceived |> Transfers.boolToString
+        IsPaid = db.IsPaid
+        TicketsReceived = db.TicketsReceived
     }
     let toDatabase (dm:Reservation) : ReservationDB = {
         ReservationID = dm.ReservationID
@@ -174,8 +174,8 @@ module ReservationDB =
         PerformanceTitle = dm.PerformanceTitle
         PerformanceDateAndTime = dm.PerformanceDateAndTime |> Transfers.tryStringToDateTimeOffset
         NumberOfTickets = dm.NumberOfTickets |> int
-        IsPaid = dm.IsPaid |> Transfers.stringToBool
-        TicketsReceived = dm.IsPaid |> Transfers.stringToBool
+        IsPaid = dm.IsPaid
+        TicketsReceived = dm.TicketsReceived
     }
 
 // names of database tables
