@@ -5,11 +5,10 @@ open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Client.Router
 
-let boolToHumanLanguage (b:bool) =
-    if b = true then
-        "Ano"
-    else
-        "Ne"
+let boolToHumanLanguage =
+    function
+        |true -> "Ano"
+        |false -> "Ne"
 
 [<ReactComponent>]
 let ReservationsView () =
