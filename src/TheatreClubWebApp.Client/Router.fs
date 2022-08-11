@@ -3,6 +3,7 @@
 open Browser.Types
 open Feliz.Router
 open Fable.Core.JsInterop
+open TheatreClubWebApp.Shared.Domain
 
 type Page =
     | Index
@@ -10,6 +11,7 @@ type Page =
     | Performances
     | Reservations
     | AddMember
+    | EditMember of ClubMember
     | AddPerformance
     | AddReservation
 
@@ -23,6 +25,7 @@ module Page =
         | [ "predstaveni" ] -> Page.Performances
         | [ "rezervace" ] -> Page.Reservations
         | [ "pridaniclena" ] -> Page.AddMember
+        | [ "editaceclena" ] -> Page.EditMember
         | [ "pridanipredstaveni" ] -> Page.AddPerformance
         | [ "pridanirezervace" ] -> Page.AddReservation
         | _ -> defaultPage

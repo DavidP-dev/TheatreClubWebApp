@@ -25,9 +25,10 @@ let init () =
         Perf = {
             Id = Guid.NewGuid()
             Title = ""
+            Theatre = ""
             DateAndTime = ""
             NumberOfTickets = ""
-            Reservations = "0"
+            NumberOfReservedTickets = "0"
             Cost = ""
             Genres = List.empty<Genre>
         }
@@ -77,6 +78,23 @@ let private inputRow state dispatch =
                     prop.defaultValue state.Perf.Title
                     prop.onChange (fun v ->
                         { state.Perf with Title = v } |> FormChanged |> dispatch
+                    )
+                ]
+            ]
+            Daisy.formControl [
+                Daisy.label [
+                    prop.for' "Theatre"
+                    prop.children [
+                        Daisy.labelText "Divadlo:"
+                    ]
+                ]
+                Daisy.input [
+                    input.bordered
+                    prop.placeholder "Divadlo"
+                    prop.name "Theatre"
+                    prop.defaultValue state.Perf.Theatre
+                    prop.onChange (fun v ->
+                        { state.Perf with Theatre = v } |> FormChanged |> dispatch
                     )
                 ]
             ]

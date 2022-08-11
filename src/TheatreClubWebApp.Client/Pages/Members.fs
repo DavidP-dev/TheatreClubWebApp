@@ -38,7 +38,7 @@ let MembersView () =
                     Html.td m.Email
                     Html.td (String.Join(", ", (List.map toCzech m.PreferredGenres)))
                     Html.td m.MemberReservations
-                    Html.td "Editovat / Smazat"
+                    Html.td [Daisy.button.a  "Editovat/Smazat"]
                 ]
             )
 

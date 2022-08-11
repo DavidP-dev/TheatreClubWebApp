@@ -14,15 +14,16 @@ type ModelR = {
     Res : Reservation
     SelectedMember : ClubMember option
     SelectedPerformance : Performance option
+    EnteredNumberOfTickets : string option
     SelectedIsPaid : bool option
     SelectedTicketsReceived : bool option
     IsValid : bool
 }
 
 type MsgR =
-   | FormChanged of Reservation
    | MemberSelected of ClubMember
    | PerformanceSelected of Performance
+   | NumberOfTicketsSelected of string
    | IsPaidSelected of bool
    | TicketReceivedSelected of bool
    | FormSubmitted
@@ -45,15 +46,15 @@ let init () =
         IsValid = false
         SelectedMember = None
         SelectedPerformance = None
+        EnteredNumberOfTickets = None
         SelectedIsPaid = None
         SelectedTicketsReceived = None
     }, Cmd.none
 
-let private validate (r:Reservation) = true
+let private validate (s:ModelR) : ModelR = {s with IsValid = true}
 
 let update msgR (state: ModelR) =
     match msgR with
-    | FormChanged r -> { state with Res = r; IsValid = validate r }, Cmd.none
     | MemberSelected m -> { state with
                                 SelectedMember = Some m
                                 Res = {
@@ -79,13 +80,20 @@ let update msgR (state: ModelR) =
                                             IsPaid = s
                                         }
                                 }, Cmd.none
+    | NumberOfTicketsSelected r -> {state with
+                                        EnteredNumberOfTickets = Some r
+                                        Res = {
+                                            state.Res with
+                                                NumberOfTickets = r
+                                            }
+                                        }, Cmd.none
     | TicketReceivedSelected t ->  { state with
                                         SelectedTicketsReceived = Some t
                                         Res = {
                                                 state.Res with
                                                     TicketsReceived = t
                                                 }
-                                        }, Cmd.none
+                                        } |> validate, Cmd.none
     | FormSubmitted ->
         let nextCmd =
             if state.IsValid then Cmd.OfAsync.perform serviceR.SaveReservation state.Res (fun _ -> FormSaved)
@@ -186,7 +194,7 @@ let private inputRow state dispatch =
                     prop.name "NumberOfTickets"
                     prop.defaultValue state.Res.NumberOfTickets
                     prop.onChange (fun v ->
-                        { state.Res with NumberOfTickets = v } |> FormChanged |> dispatch
+                        v |> NumberOfTicketsSelected |> dispatch
                     )
                 ]
             ]

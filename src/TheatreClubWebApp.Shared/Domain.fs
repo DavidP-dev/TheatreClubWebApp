@@ -32,9 +32,10 @@ type Performance =
     {
         Id : Guid
         Title : string
+        Theatre : string
         DateAndTime: string
         NumberOfTickets : string
-        Reservations : string
+        NumberOfReservedTickets : string
         Cost : string
         Genres : Genre list
     }

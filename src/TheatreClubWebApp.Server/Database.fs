@@ -32,9 +32,10 @@ type PerformanceDB =
     {
         Id : Guid
         Title : string
+        Theatre : string
         DateAndTime: DateTimeOffset
         NumberOfTickets : int
-        Reservations : int
+        NumberOfReservedTickets : int
         Cost : int
         Genres : string
     }
@@ -136,9 +137,10 @@ module PerformancesDB =
     let toDomain (db:PerformanceDB) : Performance = {
         Id = db.Id
         Title = db.Title
+        Theatre = db.Theatre
         DateAndTime = db.DateAndTime |> Transfers.dateTimeOffsetToString
         NumberOfTickets = db.NumberOfTickets |> string
-        Reservations = db.Reservations |> string
+        NumberOfReservedTickets = db.NumberOfReservedTickets |> string
         Cost = db.Cost |> string
         Genres =  db.Genres.Split(",") |> Array.map MembersDb.parseGenre |> List.ofArray
         }
@@ -146,9 +148,10 @@ module PerformancesDB =
     let toDatabase (dm:Performance) : PerformanceDB = {
         Id = dm.Id
         Title = dm.Title
+        Theatre = dm.Theatre
         DateAndTime = dm.DateAndTime |> Transfers.tryStringToDateTimeOffset
         NumberOfTickets = dm.NumberOfTickets |> int
-        Reservations = dm.Reservations |> int
+        NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         Cost = dm.Cost |> int
         Genres = dm.Genres |> List.map MembersDb.genreToString |> (fun x -> String.Join(",", x))}
 
