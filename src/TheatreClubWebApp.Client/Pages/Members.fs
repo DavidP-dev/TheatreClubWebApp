@@ -38,7 +38,23 @@ let MembersView () =
                     Html.td m.Email
                     Html.td (String.Join(", ", (List.map toCzech m.PreferredGenres)))
                     Html.td m.MemberReservations
-                    Html.td [Daisy.button.a  "Editovat/Smazat"]
+                    Html.td [
+                        Daisy.button.button  [
+                            prop.className "btn-sm"
+                            button.outline
+                            button.primary
+                            prop.text "Editovat"
+                            prop.onClick (fun _ -> Page.EditMember |> Router.navigatePage)
+                        ]
+                    ]
+                    Html.td [
+                        Daisy.button.button  [
+                            prop.className "btn-sm"
+                            button.outline
+                            button.primary
+                            prop.text "Smazat"
+                        ]
+                    ]
                 ]
             )
 
@@ -61,7 +77,15 @@ let MembersView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.tr [Html.th "Příjmení"; Html.th "Jméno"; Html.th "Email"; Html.th "Preferované žánry"; Html.th "Aktivní rezervace"; Html.th "Editace člena"]]
+                        Html.thead [Html.tr [
+                            Html.th "Příjmení"
+                            Html.th "Jméno"
+                            Html.th "Email"
+                            Html.th "Preferované žánry"
+                            Html.th "Aktivní rezervace"
+                            Html.th "Editace člena"
+                            Html.th "Smazání člena"
+                        ]]
                         Html.tbody memberRows
                     ]
                 ]

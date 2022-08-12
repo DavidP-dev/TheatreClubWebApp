@@ -29,7 +29,22 @@ let ReservationsView () =
                     Html.td (r.MemberName + " " +  r.MemberSurname)
                     Html.td (r.IsPaid |> boolToHumanLanguage)
                     Html.td (r.TicketsReceived |> boolToHumanLanguage)
-                    Html.td "Editovat / Smazat"
+                    Html.td [
+                        Daisy.button.button  [
+                            prop.className "btn-sm"
+                            button.outline
+                            button.primary
+                            prop.text "Editovat"
+                        ]
+                    ]
+                    Html.td [
+                        Daisy.button.button  [
+                            prop.className "btn-sm"
+                            button.outline
+                            button.primary
+                            prop.text "Smazat"
+                        ]
+                    ]
                 ]
             )
 
@@ -51,7 +66,13 @@ let ReservationsView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.th "Divadelní přestavení"; Html.th "Datum a čas představení"; Html.th "Objednatel"; Html.th "Zaplaceno"; Html.th "Vstupenky doručeny"; Html.th "Editace rezervace"]
+                        Html.thead [Html.th "Divadelní přestavení"
+                                    Html.th "Datum a čas představení"
+                                    Html.th "Objednatel"
+                                    Html.th "Zaplaceno"
+                                    Html.th "Vstupenky doručeny"
+                                    Html.th "Editace rezervace"
+                                    Html.th "Odstranění rezervace"]
                         Html.tbody reservationsRows
                     ]
                 ]

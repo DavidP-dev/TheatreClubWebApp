@@ -12,9 +12,8 @@ let IndexView () =
             [
              Daisy.alert [
                 alert.info
-                prop.className "justify-center"
+                prop.className "justify-center bg-base-100"
                 prop.text "Vítej ve své divadelní databázi. V menu nahoře, klikni, na co potřebuješ."
-
         ]
     ]
 ]

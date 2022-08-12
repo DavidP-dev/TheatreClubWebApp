@@ -28,23 +28,31 @@ let AppView () =
 
     let navigation =
         Daisy.navbar [
-            prop.className "mb-4 shadow-lg bg-neutral text-neutral-content rounded-box"
+            prop.className "mb-4 shadow-sm bg-base-200 text-neutral-content rounded-box"
             prop.children [
                 Daisy.navbarStart []
                 Daisy.navbarCenter [
                     Daisy.button.button [
+                        button.outline
+                        button.primary
                         prop.text "Úvod"
                         prop.onClick (fun _ -> Page.Index |> Router.navigatePage)
                     ]
                     Daisy.button.button [
+                         button.outline
+                         button.primary
                          prop.text "Členové klubu"
                          prop.onClick (fun _ -> Page.Members |> Router.navigatePage)
                     ]
                     Daisy.button.button [
+                         button.outline
+                         button.primary
                          prop.text "Divadelní představení"
                          prop.onClick (fun _ -> Page.Performances |> Router.navigatePage)
                     ]
                     Daisy.button.button [
+                         button.outline
+                         button.primary
                          prop.text "Rezervace"
                          prop.onClick (fun _ -> Page.Reservations |> Router.navigatePage)
 
@@ -65,6 +73,7 @@ let AppView () =
         | Page.AddMember -> Pages.AddMember.AddMemberView ()
         | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
         | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
+        | Page.EditMember -> Pages.EditMember.EditMemberView ()
 
     React.router [
         router.pathMode
