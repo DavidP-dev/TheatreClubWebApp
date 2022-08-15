@@ -1,6 +1,5 @@
 module TheatreClubWebApp.Client.Pages.Performances
 
-open System
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Router
@@ -31,6 +30,7 @@ let PerformancesView () =
                                 button.outline
                                 button.primary
                                 prop.text "Editovat"
+                                prop.onClick (fun _ -> Page.EditPerformance |> Router.navigatePage)
                             ]
                         ]
                         Html.td [

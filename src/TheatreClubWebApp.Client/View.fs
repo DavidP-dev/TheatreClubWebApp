@@ -74,6 +74,8 @@ let AppView () =
         | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
         | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
         | Page.EditMember -> Pages.EditMember.EditMemberView ()
+        | Page.EditPerformance -> Pages.EditPerformance.EditPerformanceView ()
+        | Page.EditReservation -> Pages.EditReservation.EditReservationView ()
 
     React.router [
         router.pathMode

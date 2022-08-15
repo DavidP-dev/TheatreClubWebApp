@@ -15,5 +15,6 @@ let IndexView () =
                 prop.className "justify-center bg-base-100"
                 prop.text "Vítej ve své divadelní databázi. V menu nahoře, klikni, na co potřebuješ."
         ]
+
     ]
 ]
