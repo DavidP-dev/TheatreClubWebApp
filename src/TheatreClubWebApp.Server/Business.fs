@@ -14,11 +14,8 @@ let register (conn:IDbConnection) (cM:ClubMember) =
         insertCMToDb conn cM
 
 // Checks club member existence and removes club member from database
-let unregister (conn:IDbConnection) (cM:ClubMember) =
-    let maybeMember = tryGetMemberByEmail conn cM.Email
-    match maybeMember with
-    | Some _ -> removeCmFromDb conn cM
-    | None -> failwith "Takový uživatel v databází neexistuje."
+let unregister (conn:IDbConnection) (CMId:Guid) =
+    removeCmFromDb conn CMId
 
 // Checks performance existence and inserts performance to database
 let addPerformance (conn:IDbConnection) (perf:Performance) =

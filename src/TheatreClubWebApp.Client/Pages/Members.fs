@@ -28,6 +28,13 @@ let MembersView () =
             setMembers members
         }
         React.useEffectOnce(loadMembers >> Async.StartImmediate)
+        let delete = React.useCallback(fun i ->
+            async {
+                let! _ = service.DeleteClubMember i
+                let! _ = loadMembers ()
+                return ()
+            }
+            |> Async.StartImmediate)
 
         let memberRows =
             members
@@ -53,6 +60,7 @@ let MembersView () =
                             button.outline
                             button.primary
                             prop.text "Smazat"
+                            prop.onClick (fun _ -> delete m.Id)
                         ]
                     ]
                 ]

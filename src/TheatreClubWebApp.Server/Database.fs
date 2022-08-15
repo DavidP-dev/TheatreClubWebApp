@@ -245,10 +245,10 @@ let insertCMToDb (conn:IDbConnection) (cM:ClubMember) =
 
 
 // removes Member from Database
-let removeCmFromDb (conn:IDbConnection) (cM:ClubMember) =
+let removeCmFromDb (conn:IDbConnection) (cMId:Guid) =
     delete {
         for m in membersTable do
-        where (m.Email = cM.Email )}
+        where (m.Id = cMId )}
     |> conn.DeleteAsync
 
 // function add Performance

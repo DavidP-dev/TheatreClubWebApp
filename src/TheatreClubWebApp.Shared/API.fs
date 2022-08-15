@@ -1,10 +1,12 @@
 ﻿module TheatreClubWebApp.Shared.API
 
+open System
 open TheatreClubWebApp.Shared.Domain
 
 type ClubMembersService = {
     GetClubMembers : unit -> Async<ClubMember list>
     SaveClubMember : ClubMember -> Async<ClubMember>
+    DeleteClubMember : Guid -> Async<unit>
 }
 with
     static member RouteBuilder _ m = sprintf "/api/clubmembers/%s" m

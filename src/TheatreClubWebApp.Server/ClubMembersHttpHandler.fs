@@ -28,9 +28,13 @@ let getService (dbConn: IDbConnection) =
             return m
         }
         |> Async.AwaitTask
-
+    DeleteClubMember = fun m ->
+        task {
+            let! _ = unregister dbConn m
+            return ()
+        }
+        |> Async.AwaitTask
 }
-
 
 let handler : HttpHandler =
     let remoting logger dbConn =
