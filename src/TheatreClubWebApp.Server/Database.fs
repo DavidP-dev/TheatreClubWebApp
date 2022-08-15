@@ -207,7 +207,22 @@ let tryGetMemberByEmail (conn:IDbConnection) (email:string) =
     |> Seq.tryHead
     |> Option.map MembersDb.toDomain
 
-// Checks existence of performance in database
+// Checks existence of club member by searching for his Id in database
+let tryGetMemberById (conn:IDbConnection) (cMId:Guid) =
+    let vysl =
+        select {
+            for m in membersTable do
+            where (m.Id = cMId)
+        }
+        |> conn.SelectAsync<MemberDB>
+
+
+    let v = vysl.Result
+    v
+    |> Seq.tryHead
+    |> Option.map MembersDb.toDomain
+
+// Checks existence of performance in database by Title and Date
 let tryGetPerformanceByTitleAndDate (conn:IDbConnection) (performance:Performance) =
     let parsedPerformance = performance.DateAndTime |> Transfers.tryStringToDateTimeOffset
     let vysl =
@@ -220,6 +235,20 @@ let tryGetPerformanceByTitleAndDate (conn:IDbConnection) (performance:Performanc
     v
     |> Seq.tryHead
     |> Option.map PerformancesDB.toDomain
+
+// Checks existence of performance in database by performance Id
+let tryGetPerformanceById (conn:IDbConnection) (pId:Guid) =
+    let vysl =
+        select {
+            for p in performancesTable do
+            where (p.Id = pId )}
+        |> conn.SelectAsync<PerformanceDB>
+
+    let v = vysl.Result
+    v
+    |> Seq.tryHead
+    |> Option.map PerformancesDB.toDomain
+
 
 // Checks existence of registration in database
 let tryGetReservationByIds (conn:IDbConnection) (res:Reservation) =
@@ -261,10 +290,10 @@ let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
     |> conn.InsertAsync
 
 // function remove Performance
-let removePerformanceFromDb (conn:IDbConnection) (perf:Performance) =
+let removePerformanceFromDb (conn : IDbConnection) (pId : Guid) =
     delete {
         for p in performancesTable do
-        where (p.Id = perf.Id )}
+        where (p.Id = pId )}
     |> conn.DeleteAsync
 
 // function add Reservation

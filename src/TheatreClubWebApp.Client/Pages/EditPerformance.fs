@@ -332,8 +332,8 @@ let private genresRow state dispatch =
 
 [<ReactComponent>]
 
-let EditPerformanceView () =
-    let state, dispatch = React.useElmish(init, update, [||])
+let EditPerformanceView (performanceId:Guid) =
+    let state, dispatch = React.useElmish(init, update, [| box performanceId |])
 
     Html.form [
         prop.onSubmit (fun e ->

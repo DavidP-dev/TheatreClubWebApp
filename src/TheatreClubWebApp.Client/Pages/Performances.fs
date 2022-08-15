@@ -8,12 +8,22 @@ open TheatreClubWebApp.Client.Server
 
 [<ReactComponent>]
 let PerformancesView () =
+
         let performances, setPerformances = React.useState(List.Empty)
+
         let loadPerformances () = async {
             let! performances = serviceP.GetPerformances()
             setPerformances performances
         }
         React.useEffectOnce(loadPerformances >> Async.StartImmediate)
+
+        let delete = React.useCallback(fun i ->
+            async {
+                let! _ = serviceP.DeletePerformance i
+                let! _ = loadPerformances ()
+                return ()
+            }
+            |> Async.StartImmediate)
 
         let performanceRows =
             performances
@@ -30,7 +40,7 @@ let PerformancesView () =
                                 button.outline
                                 button.primary
                                 prop.text "Editovat"
-                                prop.onClick (fun _ -> Page.EditPerformance |> Router.navigatePage)
+                                prop.onClick (fun _ -> p.Id |> Page.EditPerformance |> Router.navigatePage)
                             ]
                         ]
                         Html.td [
@@ -39,6 +49,7 @@ let PerformancesView () =
                                 button.outline
                                 button.primary
                                 prop.text "Smazat"
+                                prop.onClick (fun _ -> delete p.Id)
                             ]
                         ]
                     ]

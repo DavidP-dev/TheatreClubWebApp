@@ -3,7 +3,7 @@
 open Browser.Types
 open Feliz.Router
 open Fable.Core.JsInterop
-
+open System
 
 type Page =
     | Index
@@ -14,7 +14,7 @@ type Page =
     | AddPerformance
     | AddReservation
     | EditMember
-    | EditPerformance
+    | EditPerformance of Guid
     | EditReservation
 
 [<RequireQualifiedAccess>]
@@ -30,7 +30,7 @@ module Page =
         | [ "pridanipredstaveni" ] -> Page.AddPerformance
         | [ "pridanirezervace" ] -> Page.AddReservation
         | [ "editaceclena" ] -> Page.EditMember
-        | [ "editacepredstaveni" ] -> Page.EditPerformance
+        | [ "editacepredstaveni"; Route.Guid i ] -> Page.EditPerformance i
         | [ "editacerezervace" ] -> Page.EditReservation
         | _ -> defaultPage
 
@@ -45,7 +45,7 @@ module Page =
         | Page.AddPerformance -> [ "pridanipredstaveni" ] |> noQueryString
         | Page.AddReservation -> [ "pridanirezervace" ] |> noQueryString
         | Page.EditMember -> [ "editaceclena" ] |> noQueryString
-        | Page.EditPerformance -> [ "editacepredstaveni" ] |> noQueryString
+        | Page.EditPerformance i -> [ "editacepredstaveni"; string i ] |> noQueryString
         | Page.EditReservation -> [ "editacerezervace" ] |> noQueryString
 
 [<RequireQualifiedAccess>]

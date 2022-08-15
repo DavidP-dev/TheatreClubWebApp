@@ -27,6 +27,12 @@ let getService (dbConn: IDbConnection) =
             return m
         }
         |> Async.AwaitTask
+    DeletePerformance = fun m ->
+        task {
+            let! _ = removePerformance dbConn m
+            return ()
+        }
+        |> Async.AwaitTask
 }
 
 

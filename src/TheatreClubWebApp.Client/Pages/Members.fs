@@ -28,6 +28,7 @@ let MembersView () =
             setMembers members
         }
         React.useEffectOnce(loadMembers >> Async.StartImmediate)
+
         let delete = React.useCallback(fun i ->
             async {
                 let! _ = service.DeleteClubMember i

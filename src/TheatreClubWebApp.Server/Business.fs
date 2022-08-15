@@ -14,8 +14,11 @@ let register (conn:IDbConnection) (cM:ClubMember) =
         insertCMToDb conn cM
 
 // Checks club member existence and removes club member from database
-let unregister (conn:IDbConnection) (CMId:Guid) =
-    removeCmFromDb conn CMId
+let unregister (conn:IDbConnection) (cMId:Guid) =
+    let maybeMember = tryGetMemberById conn cMId
+    match maybeMember with
+        | Some _ -> removeCmFromDb conn cMId
+        | None -> failwith $"Uživatel s Id: {cMId} v databázi neexistuje."
 
 // Checks performance existence and inserts performance to database
 let addPerformance (conn:IDbConnection) (perf:Performance) =
@@ -25,11 +28,11 @@ let addPerformance (conn:IDbConnection) (perf:Performance) =
     | None -> addPerformanceToDb conn perf
 
 // Checks performance existence and and removes performance from database
-let removePerformance (conn:IDbConnection) (perf:Performance) =
-    let maybePerformance = tryGetPerformanceByTitleAndDate conn perf
+let removePerformance (conn:IDbConnection) (pId:Guid) =
+    let maybePerformance = tryGetPerformanceById conn pId
     match maybePerformance with
-    | Some _ -> removePerformanceFromDb conn perf
-    | None -> failwith $"Divadlení představení {perf.Title} není v databázi."
+    | Some _ -> removePerformanceFromDb conn pId
+    | None -> failwith $"Divadlení představení s Id:{pId} není v databázi."
 
 // Checks reservation existence and adds reservation to database
 let addReservation (conn:IDbConnection) (res:Reservation) =
