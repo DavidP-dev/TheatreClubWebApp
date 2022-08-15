@@ -20,6 +20,14 @@ let ReservationsView () =
         }
         React.useEffectOnce(loadReservations >> Async.StartImmediate)
 
+        let delete = React.useCallback(fun i ->
+            async {
+                let! _ = serviceR.DeleteReservation i
+                let! _ = loadReservations ()
+                return ()
+            }
+            |> Async.StartImmediate)
+
         let reservationsRows =
             reservations
             |> List.map (fun r ->
@@ -44,6 +52,7 @@ let ReservationsView () =
                             button.outline
                             button.primary
                             prop.text "Smazat"
+                            prop.onClick (fun _ -> delete r.ReservationID)
                         ]
                     ]
                 ]

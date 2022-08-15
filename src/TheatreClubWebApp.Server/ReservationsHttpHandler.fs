@@ -21,12 +21,20 @@ let getService (dbConn: IDbConnection) =
             return getAllReservations dbConn
         }
         |> Async.AwaitTask
+
     SaveReservation = fun r ->
-    task {
-        let! _ = addReservation dbConn r
-        return r
-    }
-    |> Async.AwaitTask
+        task {
+            let! _ = addReservation dbConn r
+            return r
+        }
+        |> Async.AwaitTask
+
+    DeleteReservation = fun r ->
+        task {
+            let! _ = removeReservation dbConn r
+            return ()
+        }
+        |> Async.AwaitTask
 
 }
 

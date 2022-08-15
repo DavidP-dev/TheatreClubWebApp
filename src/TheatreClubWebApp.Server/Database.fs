@@ -12,7 +12,8 @@ open Microsoft.Data.SqlClient
 open Microsoft.FSharp.Core
 
 // Connection to database
-let connstring = "data source=PICHA\\sqlexpress;initial catalog=TheatreClubDBTest;integrated security=True;TrustServerCertificate=True"
+let connstring =
+    "data source=PICHA\\sqlexpress;initial catalog=TheatreClubDBTest;integrated security=True;TrustServerCertificate=True"
 
 let getConnection () : IDbConnection =
     new SqlConnection(connstring)
@@ -251,11 +252,11 @@ let tryGetPerformanceById (conn:IDbConnection) (pId:Guid) =
 
 
 // Checks existence of registration in database
-let tryGetReservationByIds (conn:IDbConnection) (res:Reservation) =
+let tryGetReservationById (conn : IDbConnection) (rId : Guid) =
     let vysl =
         select {
             for r in ReservationsTable do
-            where (r.PerformanceId = res.PerformanceId && r.MemberId = res.MemberId)}
+            where (r.ReservationID = rId)}
         |> conn.SelectAsync<ReservationDB>
 
     let v = vysl.Result
@@ -279,6 +280,12 @@ let removeCmFromDb (conn:IDbConnection) (cMId:Guid) =
         for m in membersTable do
         where (m.Id = cMId )}
     |> conn.DeleteAsync
+
+// updates Member's data
+let updateClubMemberDb (con:IDbConnection) (cM:ClubMember) =
+    cM // To do..
+
+
 
 // function add Performance
 let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
@@ -306,10 +313,10 @@ let addReservationToDb (conn:IDbConnection) (res:Reservation) =
     |> conn.InsertAsync
 
 // function remove Reservation
-let removeReservationFromDb (conn:IDbConnection) (res:Reservation) =
+let removeReservationFromDb (conn:IDbConnection) (rId:Guid) =
     delete {
         for r in ReservationsTable do
-        where (r.ReservationID = res.ReservationID )}
+        where (r.ReservationID = rId )}
     |> conn.DeleteAsync
 
 // Returns all club members in database
