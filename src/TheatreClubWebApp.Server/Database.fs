@@ -282,9 +282,14 @@ let removeCmFromDb (conn:IDbConnection) (cMId:Guid) =
     |> conn.DeleteAsync
 
 // updates Member's data
-let updateClubMemberDb (con:IDbConnection) (cM:ClubMember) =
-    cM // To do..
-
+let updateClubMemberDb (conn:IDbConnection) (cM:ClubMember) =
+    let dbMember = MembersDb.toDatabase cM
+    update {
+        for m in membersTable do
+        set dbMember
+        where (m.Id = dbMember.Id)
+    }
+    |> conn.UpdateAsync
 
 
 // function add Performance
