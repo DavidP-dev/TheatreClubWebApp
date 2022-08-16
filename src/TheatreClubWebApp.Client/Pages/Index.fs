@@ -8,7 +8,7 @@ open Feliz.DaisyUI.Operators
 [<ReactComponent>]
 let IndexView () =
     Html.div [
-        prop.className "flex flex-col gap-4 mx-14"
+        prop.className "flex flex-col gap-4 mx-auto"
         prop.children [
             Daisy.alert [
                 alert.info
@@ -16,8 +16,8 @@ let IndexView () =
                 prop.text "Vítej ve své divadelní databázi. V menu nahoře, klikni, na co potřebuješ."
             ]
             Html.img [
-                prop.className "w-30 w-30"
-                ++ mask.star2
+                prop.className "justify-center content-center items-center w-80 h-80"
+                ++ mask.squircle
                 prop.src "https://source.unsplash.com/random/400x400/?performance"
             ]
         ]
