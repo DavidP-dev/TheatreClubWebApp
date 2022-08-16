@@ -52,7 +52,7 @@ let MembersView () =
                             button.outline
                             button.primary
                             prop.text "Editovat"
-                            prop.onClick (fun _ -> Page.EditMember |> Router.navigatePage)
+                            prop.onClick (fun _ -> m.Id |> Page.EditMember |> Router.navigatePage)
                         ]
                     ]
                     Html.td [

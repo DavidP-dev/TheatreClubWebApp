@@ -13,7 +13,7 @@ type Page =
     | AddMember
     | AddPerformance
     | AddReservation
-    | EditMember
+    | EditMember of Guid
     | EditPerformance of Guid
     | EditReservation
 
@@ -29,7 +29,7 @@ module Page =
         | [ "pridaniclena" ] -> Page.AddMember
         | [ "pridanipredstaveni" ] -> Page.AddPerformance
         | [ "pridanirezervace" ] -> Page.AddReservation
-        | [ "editaceclena" ] -> Page.EditMember
+        | [ "editaceclena"; Route.Guid i ] -> Page.EditMember i
         | [ "editacepredstaveni"; Route.Guid i ] -> Page.EditPerformance i
         | [ "editacerezervace" ] -> Page.EditReservation
         | _ -> defaultPage
@@ -44,7 +44,7 @@ module Page =
         | Page.AddMember -> [ "pridaniclena" ] |> noQueryString
         | Page.AddPerformance -> [ "pridanipredstaveni" ] |> noQueryString
         | Page.AddReservation -> [ "pridanirezervace" ] |> noQueryString
-        | Page.EditMember -> [ "editaceclena" ] |> noQueryString
+        | Page.EditMember i -> [ "editaceclena"; string i ] |> noQueryString
         | Page.EditPerformance i -> [ "editacepredstaveni"; string i ] |> noQueryString
         | Page.EditReservation -> [ "editacerezervace" ] |> noQueryString
 

@@ -73,7 +73,7 @@ let AppView () =
         | Page.AddMember -> Pages.AddMember.AddMemberView ()
         | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
         | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
-        | Page.EditMember -> Pages.EditMember.EditMemberView ()
+        | Page.EditMember i -> Pages.EditMember.EditMemberView i
         | Page.EditPerformance i -> Pages.EditPerformance.EditPerformanceView i
         | Page.EditReservation -> Pages.EditReservation.EditReservationView ()
 

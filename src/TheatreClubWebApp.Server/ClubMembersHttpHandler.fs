@@ -22,6 +22,17 @@ let getService (dbConn: IDbConnection) =
             return getAllClubMembers dbConn
         }
         |> Async.AwaitTask
+    GetClubMember = fun m ->
+         task {
+            return getClubMemberById dbConn m
+         }
+         |> Async.AwaitTask
+    UpdateClubMember = fun m ->
+        task {
+            let! _ = updateClubMember dbConn m
+            return m
+        }
+        |> Async.AwaitTask
     SaveClubMember = fun m ->
         task {
             let! _ = register dbConn m
