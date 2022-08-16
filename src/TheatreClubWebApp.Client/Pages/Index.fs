@@ -15,10 +15,15 @@ let IndexView () =
                 prop.className "justify-center bg-base-100"
                 prop.text "Vítej ve své divadelní databázi. V menu nahoře, klikni, na co potřebuješ."
             ]
-            Html.img [
-                prop.className "justify-center content-center items-center w-80 h-80"
-                ++ mask.squircle
-                prop.src "https://source.unsplash.com/random/400x400/?performance"
+            Html.div [
+                prop.className "flex justify-center"
+                prop.children [
+                    Html.img [
+                        prop.className "h-80 w-80"
+                        ++ mask.squircle
+                        prop.src "https://source.unsplash.com/random/400x400/?performance"
+                    ]
+                ]
             ]
         ]
     ]

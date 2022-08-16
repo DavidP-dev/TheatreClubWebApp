@@ -292,7 +292,7 @@ let updateClubMemberDb (conn:IDbConnection) (cM:ClubMember) =
     |> conn.UpdateAsync
 
 
-// function add Performance
+// function adds Performance
 let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
     let dbPerformance = PerformancesDB.toDatabase perf
     insert {
@@ -301,12 +301,22 @@ let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
     }
     |> conn.InsertAsync
 
-// function remove Performance
+// function removes Performance
 let removePerformanceFromDb (conn : IDbConnection) (pId : Guid) =
     delete {
         for p in performancesTable do
         where (p.Id = pId )}
     |> conn.DeleteAsync
+
+// function updates performance
+let updatePerformanceDb (conn:IDbConnection) (perf:Performance) =
+    let dbPerformance = PerformancesDB.toDatabase perf
+    update {
+        for p in performancesTable do
+        set dbPerformance
+        where (p.Id = dbPerformance.Id)
+    }
+    |> conn.UpdateAsync
 
 // function add Reservation
 let addReservationToDb (conn:IDbConnection) (res:Reservation) =

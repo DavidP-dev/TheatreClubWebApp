@@ -41,6 +41,13 @@ let removePerformance (conn:IDbConnection) (pId:Guid) =
     | Some _ -> removePerformanceFromDb conn pId
     | None -> failwith $"Divadlení představení s Id:{pId} není v databázi."
 
+// Checks performance for existence and updates all performance data
+let updateClubPerformance (conn:IDbConnection) (perf : Performance) =
+    let maybePerformance = tryGetPerformanceById conn perf.Id
+    match maybePerformance with
+        | Some _ -> updatePerformanceDb conn perf
+        | None -> failwith $"Uživatel s Id: {perf.Id} v databází neexistuje."
+
 // Checks reservation existence and adds reservation to database
 let addReservation (conn:IDbConnection) (res:Reservation) =
     let maybeReservation = tryGetReservationById conn res.ReservationID
