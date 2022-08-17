@@ -27,6 +27,20 @@ let updateClubMember (conn:IDbConnection) (cM : ClubMember) =
         | Some _ -> updateClubMemberDb conn cM
         | None -> failwith $"Uživatel s Id: {cM.Id} v databází neexistuje."
 
+// Returns all Club members from database
+let getAllClubMembers (conn:IDbConnection) =
+    returnAllClubMembersFromDb conn
+
+// Return club member by ID
+let getClubMemberById (conn:IDbConnection) (cId:Guid) =
+    let memberById = returnClubMemberById conn cId |> List.head
+    memberById
+
+// Return club members by genre
+let getClubMembersByGenre (conn:IDbConnection) (genre:Genre) =
+    let membersByPreferenceList = returnClubMembersByGenre conn genre
+    printfn "Zde je seznam členů se zadanou preferencí: %A" membersByPreferenceList
+
 // Checks performance existence and inserts performance to database
 let addPerformance (conn:IDbConnection) (perf:Performance) =
     let maybePerformance = tryGetPerformanceByTitleAndDate conn perf
@@ -62,10 +76,6 @@ let removeReservation (conn : IDbConnection) (rId : Guid) =
     | Some _ -> removeReservationFromDb conn rId
     | None _ -> failwith $"Rezervace ID {rId} v databázi neexistuje."
 
-// Returns all Club members from database
-let getAllClubMembers (conn:IDbConnection) =
-    returnAllClubMembersFromDb conn
-
 // Returns all performances
 let getAllPerformances (conn:IDbConnection) =
     let performancesList = returnAllPerformancesFromDb conn
@@ -86,20 +96,9 @@ let getAllUnpaidReservations (conn:IDbConnection) =
     let unPaidReservationsList = returnAllUnpaidReservations conn
     printfn "Zde je aktuální seznam nezaplacených objednávek %A" unPaidReservationsList
 
-// Return member by ID
-let getClubMemberById (conn:IDbConnection) (cId:Guid) =
-    let memberById = returnClubMemberById conn cId |> List.head
-    memberById
-
 // Return performance by ID
-let getPerformanceById (con:IDbConnection) (cId:Guid) =
-    let performanceById =  returnPerformanceById con cId |> List.head
-    performanceById
-
-// Return club members by genre
-let getClubMembersByGenre (conn:IDbConnection) (genre:Genre) =
-    let membersByPreferenceList = returnClubMembersByGenre conn genre
-    printfn "Zde je seznam členů se zadanou preferencí: %A" membersByPreferenceList
+let getPerformanceById (con:IDbConnection) (pId:Guid) =
+    returnPerformanceById con pId
 
 // Return performance by genre
 let getPerformancesByGenre (conn:IDbConnection) (genre:Genre) =

@@ -414,12 +414,12 @@ let returnClubMemberById (conn:IDbConnection) (cId:Guid)  =
 let returnPerformanceById (conn:IDbConnection) (pId:Guid)  =
     let output =
         select {
-            for p in membersTable do
+            for p in performancesTable do
             where (p.Id = pId)
         }
         |> conn.SelectAsync<PerformanceDB>
     let v = output.Result
-    v |> Seq.toList |> List.map(PerformancesDB.toDomain)
+    v |> Seq.toList |> List.map(PerformancesDB.toDomain) |> List.head
 
 // Returns club members by preferred genres
 let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
