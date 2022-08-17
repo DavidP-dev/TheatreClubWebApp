@@ -62,6 +62,15 @@ let updatePerformance (conn:IDbConnection) (perf : Performance) =
         | Some _ -> updatePerformanceDb conn perf
         | None -> failwith $"Uživatel s Id: {perf.Id} v databází neexistuje."
 
+// Returns all performances
+let getAllPerformances (conn:IDbConnection) =
+    let performancesList = returnAllPerformancesFromDb conn
+    performancesList
+
+// Return performance by ID
+let getPerformanceById (con:IDbConnection) (pId:Guid) =
+    returnPerformanceById con pId
+
 // Checks reservation existence and adds reservation to database
 let addReservation (conn:IDbConnection) (res:Reservation) =
     let maybeReservation = tryGetReservationById conn res.ReservationID
@@ -76,10 +85,9 @@ let removeReservation (conn : IDbConnection) (rId : Guid) =
     | Some _ -> removeReservationFromDb conn rId
     | None _ -> failwith $"Rezervace ID {rId} v databázi neexistuje."
 
-// Returns all performances
-let getAllPerformances (conn:IDbConnection) =
-    let performancesList = returnAllPerformancesFromDb conn
-    performancesList
+// Returns reservation by ID
+let returnReservationById (conn:IDbConnection) (rId:Guid) =
+    returnReservationByIdDb conn rId
 
 // Returns all reservations
 let getAllReservations (conn:IDbConnection) =
@@ -96,9 +104,6 @@ let getAllUnpaidReservations (conn:IDbConnection) =
     let unPaidReservationsList = returnAllUnpaidReservations conn
     printfn "Zde je aktuální seznam nezaplacených objednávek %A" unPaidReservationsList
 
-// Return performance by ID
-let getPerformanceById (con:IDbConnection) (pId:Guid) =
-    returnPerformanceById con pId
 
 // Return performance by genre
 let getPerformancesByGenre (conn:IDbConnection) (genre:Genre) =

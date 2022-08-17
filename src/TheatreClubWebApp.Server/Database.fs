@@ -421,6 +421,17 @@ let returnPerformanceById (conn:IDbConnection) (pId:Guid)  =
     let v = output.Result
     v |> Seq.toList |> List.map(PerformancesDB.toDomain) |> List.head
 
+// Returns reservation by ID
+let returnReservationByIdDb (conn:IDbConnection) (rId:Guid)  =
+    let output =
+        select {
+            for r in ReservationsTable do
+            where (r.ReservationID = rId)
+        }
+        |> conn.SelectAsync<ReservationDB>
+    let v = output.Result
+    v |> Seq.toList |> List.map(ReservationDB.toDomain) |> List.head
+
 // Returns club members by preferred genres
 let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
     let genreString = MembersDb.dapperGenreString genre
