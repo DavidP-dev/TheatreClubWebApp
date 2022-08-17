@@ -17,6 +17,8 @@ with
 
 type PerformancesService = {
     GetPerformances : unit -> Async<Performance list>
+    GetPerformance : Guid -> Async<Performance>
+    UpdatePerformance : Performance -> Async<Performance>
     SavePerformance : Performance -> Async<Performance>
     DeletePerformance : Guid -> Async<unit>
 }

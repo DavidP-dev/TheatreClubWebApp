@@ -21,6 +21,17 @@ let getService (dbConn: IDbConnection) =
             return getAllPerformances dbConn
         }
         |> Async.AwaitTask
+    GetPerformance = fun p ->
+         task {
+            return getPerformanceById dbConn p
+         }
+         |> Async.AwaitTask
+    UpdatePerformance = fun p ->
+        task {
+            let! _ = updatePerformance dbConn p
+            return p
+        }
+        |> Async.AwaitTask
     SavePerformance = fun m ->
         task {
             let! _ = addPerformance dbConn m

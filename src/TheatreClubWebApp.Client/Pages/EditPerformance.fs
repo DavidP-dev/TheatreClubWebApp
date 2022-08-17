@@ -17,10 +17,12 @@ type Model = {
 
 type Msg =
    | FormChanged of Performance
+   | LoadPerformance of Guid
+   | PerformanceLoaded of Performance
    | FormSubmitted
    | FormSaved
 
-let init () =
+let init (pId: Guid) =
     {
         Perf = {
             Id = Guid.NewGuid()

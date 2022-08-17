@@ -42,7 +42,7 @@ let removePerformance (conn:IDbConnection) (pId:Guid) =
     | None -> failwith $"Divadlení představení s Id:{pId} není v databázi."
 
 // Checks performance for existence and updates all performance data
-let updateClubPerformance (conn:IDbConnection) (perf : Performance) =
+let updatePerformance (conn:IDbConnection) (perf : Performance) =
     let maybePerformance = tryGetPerformanceById conn perf.Id
     match maybePerformance with
         | Some _ -> updatePerformanceDb conn perf
@@ -91,7 +91,7 @@ let getClubMemberById (conn:IDbConnection) (cId:Guid) =
     let memberById = returnClubMemberById conn cId |> List.head
     memberById
 
-// Return reservation by ID
+// Return performance by ID
 let getPerformanceById (con:IDbConnection) (cId:Guid) =
     let performanceById =  returnPerformanceById con cId |> List.head
     performanceById
