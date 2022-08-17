@@ -288,34 +288,34 @@ let EditMemberView (i:Guid) =
     let state,dispatch = React.useElmish(init i, update, [| |])
 
     Html.form [
-            prop.onSubmit (fun e ->
-                e.preventDefault()
-                FormSubmitted |> dispatch
-            )
-            prop.children [
-                Html.div [
-                    prop.className "flex flex-col items-center gap-4 mx-14"
-                    prop.children [
+        prop.onSubmit (fun e ->
+            e.preventDefault()
+            FormSubmitted |> dispatch
+        )
+        prop.children [
+            Html.div [
+                prop.className "flex flex-col items-center gap-4 mx-14"
+                prop.children [
 
-                        match state.Member with
-                        | Some m ->
-                            alertRow
-                            inputRow m dispatch
-                            genresInfo
-                            genresRow m dispatch
+                    match state.Member with
+                    | Some m ->
+                        alertRow
+                        inputRow m dispatch
+                        genresInfo
+                        genresRow m dispatch
 
-                            Html.div [
+                        Html.div [
 
-                                Daisy.button.submit [
-                                    button.outline
-                                    button.primary
-                                    button.lg
-                                    prop.value "Ulož změny"
-                                    prop.disabled (not state.IsValid)
-                                ]
+                            Daisy.button.submit [
+                                button.outline
+                                button.primary
+                                button.lg
+                                prop.value "Ulož změny"
+                                prop.disabled (not state.IsValid)
                             ]
-                        | None -> Html.div "LOADING..."
-                    ]
+                        ]
+                    | None -> Html.div "Náhrávám..."
                 ]
             ]
+        ]
     ]
