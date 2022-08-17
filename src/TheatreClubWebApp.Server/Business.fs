@@ -85,6 +85,13 @@ let removeReservation (conn : IDbConnection) (rId : Guid) =
     | Some _ -> removeReservationFromDb conn rId
     | None _ -> failwith $"Rezervace ID {rId} v databázi neexistuje."
 
+// Checks performance for existence and updates all performance data
+let updateReservation (conn:IDbConnection) (res : Reservation) =
+    let maybeReservation = tryGetReservationById conn res.PerformanceId
+    match maybeReservation with
+        | Some _ -> updateReservationDb conn res
+        | None -> failwith $"Uživatel s Id: {res.ReservationID} v databází neexistuje."
+
 // Returns reservation by ID
 let returnReservationById (conn:IDbConnection) (rId:Guid) =
     returnReservationByIdDb conn rId
@@ -103,6 +110,7 @@ let getAllUndeliveredReservations (conn:IDbConnection) =
 let getAllUnpaidReservations (conn:IDbConnection) =
     let unPaidReservationsList = returnAllUnpaidReservations conn
     printfn "Zde je aktuální seznam nezaplacených objednávek %A" unPaidReservationsList
+
 
 
 // Return performance by genre

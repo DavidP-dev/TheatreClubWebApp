@@ -27,6 +27,8 @@ with
 
 type ReservationsService = {
     GetReservations : unit -> Async<Reservation list>
+    GetReservation : Guid -> Async<Reservation>
+    UpdateReservation : Reservation -> Async<Reservation>
     SaveReservation : Reservation -> Async<Reservation>
     DeleteReservation : Guid -> Async<unit>
 }

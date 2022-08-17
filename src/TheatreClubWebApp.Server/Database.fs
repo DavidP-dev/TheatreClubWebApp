@@ -334,6 +334,16 @@ let removeReservationFromDb (conn:IDbConnection) (rId:Guid) =
         where (r.ReservationID = rId )}
     |> conn.DeleteAsync
 
+// function update Reservation
+let updateReservationDb (conn:IDbConnection) (res:Reservation) =
+    let dbReservation = ReservationDB.toDatabase res
+    update {
+        for r in ReservationsTable do
+        set dbReservation
+        where (r.ReservationID = dbReservation.ReservationID)
+    }
+    |> conn.UpdateAsync
+
 // Returns all club members in database
 let returnAllClubMembersFromDb (conn:IDbConnection) =
         let output =

@@ -279,7 +279,7 @@ let private selectRow3 state dispatch =
 
 [<ReactComponent>]
 
-let EditReservationView () =
+let EditReservationView (cId : Guid) =
 
 // Load ClubMember list for dropdown menu
     let members, setMembers = React.useState(List.empty)
