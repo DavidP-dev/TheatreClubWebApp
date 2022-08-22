@@ -10,106 +10,57 @@ open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Shared.Domain
 
 // Adding reservation
-type ModelR = {
-    Res : Reservation
-    SelectedMember : ClubMember option
-    SelectedPerformance : Performance option
-    EnteredNumberOfTickets : string option
-    SelectedIsPaid : bool option
-    SelectedTicketsReceived : bool option
+type Model = {
+    Res : Reservation option
+    cM : ClubMember option
+    Perf: Performance option
     IsValid : bool
 }
 
-type MsgR =
-   | MemberSelected of ClubMember
-   | PerformanceSelected of Performance
-   | NumberOfTicketsSelected of string
-   | IsPaidSelected of bool
-   | TicketReceivedSelected of bool
+type Msg =
+   | LoadReservation of Guid
+   | ReservationLoaded of Reservation
+   | LoadMembers
+   | MembersLoaded of ClubMember list
+   | LoadPerformances
+   | PerformancesLoaded of Performance list
+   | FormChanged of Reservation
    | FormSubmitted
    | FormSaved
 
-let init () =
+let init (rId : Guid) =
     {
-        Res = {
-            ReservationID = Guid.NewGuid()
-            MemberId = Guid.NewGuid()
-            MemberName = ""
-            MemberSurname = ""
-            PerformanceId = Guid.NewGuid()
-            PerformanceTitle = ""
-            PerformanceDateAndTime = ""
-            NumberOfTickets = ""
-            IsPaid = false
-            TicketsReceived = false
-        }
+        Res = None
+        cM = None
+        Perf = None
         IsValid = false
-        SelectedMember = None
-        SelectedPerformance = None
-        EnteredNumberOfTickets = None
-        SelectedIsPaid = None
-        SelectedTicketsReceived = None
-    }, Cmd.none
+    }, Cmd.ofMsg (LoadReservation rId)
 
-let private validate (s:ModelR) : ModelR = {s with IsValid = true}
+let private validate (res : Reservation) =
+    String.IsNullOrWhiteSpace(res.MemberName) |> not
+    && String.IsNullOrWhiteSpace(res.MemberSurname) |> not
+    && String.IsNullOrWhiteSpace(res.PerformanceTitle) |> not
+    && String.IsNullOrWhiteSpace(res.PerformanceDateAndTime) |> not
+    && String.IsNullOrWhiteSpace(res.NumberOfTickets) |> not
 
-let update msgR (state: ModelR) =
-    match msgR with
-    | MemberSelected m -> { state with
-                                SelectedMember = Some m
-                                Res = {
-                                           state.Res with
-                                               MemberId = m.Id
-                                               MemberName = m.Name
-                                               MemberSurname = m.Surname
-                                }
-                            }, Cmd.none
-    | PerformanceSelected p -> { state with
-                                    SelectedPerformance = Some p
-                                    Res = {
-                                            state.Res with
-                                                PerformanceId = p.Id
-                                                PerformanceTitle = p.Title
-                                                PerformanceDateAndTime = p.DateAndTime
-                                            }
-                                    }, Cmd.none
-    | IsPaidSelected s -> { state with
-                                SelectedIsPaid = Some s
-                                Res = {
-                                        state.Res with
-                                            IsPaid = s
-                                        }
-                                }, Cmd.none
-    | NumberOfTicketsSelected r -> {state with
-                                        EnteredNumberOfTickets = Some r
-                                        Res = {
-                                            state.Res with
-                                                NumberOfTickets = r
-                                            }
-                                        }, Cmd.none
-    | TicketReceivedSelected t ->  { state with
-                                        SelectedTicketsReceived = Some t
-                                        Res = {
-                                                state.Res with
-                                                    TicketsReceived = t
-                                                }
-                                        } |> validate, Cmd.none
+let update msg (state: Model) =
+
+    match msg with
+    | FormChanged r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
     | FormSubmitted ->
         let nextCmd =
-            if state.IsValid then Cmd.OfAsync.perform serviceR.SaveReservation state.Res (fun _ -> FormSaved)
-            else Cmd.none
+            match state.Res with
+            | Some r -> Cmd.OfAsync.perform serviceR.UpdateReservation r (fun _ -> FormSaved)
+            | None -> Cmd.none
         state, nextCmd
     | FormSaved -> state, Page.Reservations |> Cmd.navigatePage
+    | LoadReservation rId -> state, Cmd.OfAsync.perform serviceR.GetReservation rId (fun x -> ReservationLoaded x)
+    | ReservationLoaded r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
 
 let stringDateTimeToDayTimeOffSet (s:string) =
     match s |> DateTimeOffset.TryParse with
     | true, value -> value
     | false, _ -> DateTimeOffset.MinValue
-
-// Update Reservation label in ClubMember Type - to do
-
-// Update Reservations label in Performance Type - to do
-
 
 let private alertRow =
     Daisy.alert [
@@ -118,7 +69,7 @@ let private alertRow =
         prop.text "Změň požadované údaje."
     ]
 
-let private selectRow (mem:ClubMember list) (perf:Performance list) (state:ModelR) dispatch =
+let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model) dispatch =
 
     Html.div [
         prop.className "flex flex-row gap-4"
@@ -127,8 +78,8 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                 prop.children [
                     Daisy.button.button [
                         button.primary
-                        match state.SelectedMember with
-                        | Some m -> prop.text ("Objednávající: " + m.Surname + " " + m.Name)
+                        match state.Res with
+                        | Some r -> prop.text ("Objednávající: " + r.MemberSurname + r.MemberName)
                         | None -> prop.text "Vyber objednávajícího"
                     ]
                     Daisy.dropdownContent [
@@ -141,7 +92,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                                         prop.text (m.Surname + " " + m.Name)
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            m |> MemberSelected |> dispatch)
+                                            MembersLoaded |> dispatch)
                                     ]
                                 ]
                         ]
@@ -152,8 +103,8 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                 prop.children [
                     Daisy.button.button [
                         button.primary
-                        match state.SelectedPerformance with
-                        | Some p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime )
+                        match state.Res with
+                        | Some r -> prop.text ("Představení: " + r.PerformanceTitle + " " + r.PerformanceDateAndTime)
                         | None -> prop.text "Vyber divadelní představení"
                     ]
                     Daisy.dropdownContent [
@@ -166,7 +117,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                                         prop.text (p.Title + " " + p.DateAndTime)
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            p |> PerformanceSelected |> dispatch)
+                                            PerformancesLoaded |> dispatch)
                                     ]
                                 ]
                         ]
@@ -273,7 +224,6 @@ let private selectRow3 state dispatch =
                     ]
                 ]
             ]
-
         ]
     ]
 
