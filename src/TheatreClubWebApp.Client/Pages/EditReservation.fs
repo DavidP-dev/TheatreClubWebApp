@@ -12,18 +12,21 @@ open TheatreClubWebApp.Shared.Domain
 // Adding reservation
 type Model = {
     Res : Reservation option
-    cM : ClubMember option
-    Perf: Performance option
+    ClubMembers : ClubMember list
+    Performances : Performance list
+    SelectedCm : Guid option
+    SelectedPerf : Guid option
+    EnteredNumberOfTickets : string option
+    SelectedIsPaid : bool option
+    SelectedTicketsReceived : bool option
     IsValid : bool
 }
 
 type Msg =
    | LoadReservation of Guid
    | ReservationLoaded of Reservation
-   | LoadMembers
-   | MembersLoaded of ClubMember list
-   | LoadPerformances
-   | PerformancesLoaded of Performance list
+   | ClubMemberSelected of Guid
+   | PerformanceSelected of Guid
    | FormChanged of Reservation
    | FormSubmitted
    | FormSaved
@@ -31,8 +34,13 @@ type Msg =
 let init (rId : Guid) =
     {
         Res = None
-        cM = None
-        Perf = None
+        ClubMembers = List.empty
+        Performances = List.empty
+        SelectedCm = None
+        SelectedPerf = None
+        EnteredNumberOfTickets = None
+        SelectedIsPaid = None
+        SelectedTicketsReceived = None
         IsValid = false
     }, Cmd.ofMsg (LoadReservation rId)
 
@@ -46,16 +54,47 @@ let private validate (res : Reservation) =
 let update msg (state: Model) =
 
     match msg with
-    | FormChanged r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
+    | LoadReservation rId -> state, Cmd.OfAsync.perform serviceR.GetReservation rId (fun x -> ReservationLoaded x)
+    | ReservationLoaded r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
+    | ClubMemberSelected cId -> { state with SelectedCm = Some cId }, Cmd.none
+    | PerformanceSelected pId -> { state with SelectedPerf = Some pId }, Cmd.none
+    | FormChanged r -> {
+                            state with
+                                Res = Some r
+                                IsValid = validate r
+                            }, Cmd.none
     | FormSubmitted ->
         let nextCmd =
             match state.Res with
-            | Some r -> Cmd.OfAsync.perform serviceR.UpdateReservation r (fun _ -> FormSaved)
+            | Some r ->
+                let selectedMember =
+                    state.SelectedCm
+                    |> Option.bind (fun m -> state.ClubMembers |> List.tryFind ( fun x -> x.Id = m))
+                let reservationWithMember =
+                    selectedMember
+                    |> Option.map (fun m -> {r with
+                                              MemberId = m.Id
+                                              MemberName = m.Name
+                                              MemberSurname = m.Surname})
+                    |> Option.defaultValue r
+                let selectedPerformance =
+                    state.SelectedPerf
+                    |> Option.bind (fun p -> state.Performances |> List.tryFind ( fun x -> x.Id = p))
+                let reservationWithPerformance =
+                    selectedPerformance
+                    |> Option.map (fun p -> {reservationWithMember with
+                                              PerformanceId = p.Id
+                                              PerformanceTitle = p.Title
+                                              PerformanceDateAndTime = p.DateAndTime})
+                    |> Option.defaultValue reservationWithMember
+                Cmd.OfAsync.perform serviceR.UpdateReservation reservationWithPerformance (fun _ -> FormSaved)
             | None -> Cmd.none
         state, nextCmd
     | FormSaved -> state, Page.Reservations |> Cmd.navigatePage
-    | LoadReservation rId -> state, Cmd.OfAsync.perform serviceR.GetReservation rId (fun x -> ReservationLoaded x)
-    | ReservationLoaded r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
+
+
+
+
 
 let stringDateTimeToDayTimeOffSet (s:string) =
     match s |> DateTimeOffset.TryParse with
@@ -78,8 +117,12 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                 prop.children [
                     Daisy.button.button [
                         button.primary
-                        match state.Res with
-                        | Some r -> prop.text ("Objednávající: " + r.MemberSurname + r.MemberName)
+                        match state.SelectedCm with
+                        | Some m ->
+                            state.ClubMembers
+                            |> List.tryFind (fun (c:ClubMember) -> c.Id = m)
+                            |> Option.map (fun m -> prop.text ("Objednávající: " + m.Surname + " " + m.Name))
+                            |> Option.defaultValue (prop.text "Vyber objednávajícího")
                         | None -> prop.text "Vyber objednávajícího"
                     ]
                     Daisy.dropdownContent [
@@ -92,7 +135,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                                         prop.text (m.Surname + " " + m.Name)
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            MembersLoaded |> dispatch)
+                                            ClubMemberSelected m.Id |> dispatch)
                                     ]
                                 ]
                         ]
@@ -103,10 +146,14 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                 prop.children [
                     Daisy.button.button [
                         button.primary
-                        match state.Res with
-                        | Some r -> prop.text ("Představení: " + r.PerformanceTitle + " " + r.PerformanceDateAndTime)
+                        match state.SelectedPerf with
+                        | Some m ->
+                            state.Performances
+                            |> List.tryFind (fun (p:Performance) -> p.Id = m)
+                            |> Option.map (fun p -> prop.text "Představení: " + p.Title + " " + p.DateAndTime))
+                            |> Option.defaultValue (prop.text "Vyber divadelní představení")
                         | None -> prop.text "Vyber divadelní představení"
-                    ]
+                   ]
                     Daisy.dropdownContent [
                         prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
                         prop.tabIndex 0
@@ -117,9 +164,11 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                                         prop.text (p.Title + " " + p.DateAndTime)
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            PerformancesLoaded |> dispatch)
+                                            PerformanceSelected p.Id |> dispatch)
+                                        ]
                                     ]
                                 ]
+                            ]
                         ]
                     ]
                 ]
@@ -145,7 +194,7 @@ let private inputRow state dispatch =
                     prop.name "NumberOfTickets"
                     prop.defaultValue state.Res.NumberOfTickets
                     prop.onChange (fun v ->
-                        v |> NumberOfTicketsSelected |> dispatch
+                        v. |> NumberOfTicketsSelected |> dispatch
                     )
                 ]
             ]
@@ -229,28 +278,28 @@ let private selectRow3 state dispatch =
 
 [<ReactComponent>]
 
-let EditReservationView (cId : Guid) =
+let EditReservationView (rId : Guid) =
 
 // Load ClubMember list for dropdown menu
-    let members, setMembers = React.useState(List.empty)
-
-    let loadMembers () = async {
-        let! members = service.GetClubMembers()
-        setMembers members
-    }
-    React.useEffectOnce(loadMembers >> Async.StartImmediate)
-
-// Load Performances list for dropdown menu
-    let performances, setPerformances = React.useState(List.Empty)
-
-    let loadPerformances () = async {
-        let! performances = serviceP.GetPerformances()
-        setPerformances performances
-    }
-    React.useEffectOnce(loadPerformances >> Async.StartImmediate)
+//    let members, setMembers = React.useState(List.empty)
+//
+//    let loadMembers () = async {
+//        let! members = service.GetClubMembers()
+//        setMembers members
+//    }
+//    React.useEffectOnce(loadMembers >> Async.StartImmediate)
+//
+//// Load Performances list for dropdown menu
+//    let performances, setPerformances = React.useState(List.Empty)
+//
+//    let loadPerformances () = async {
+//        let! performances = serviceP.GetPerformances()
+//        setPerformances performances
+//    }
+//    React.useEffectOnce(loadPerformances >> Async.StartImmediate)
 
 // Saving reservation
-    let state, dispatch = React.useElmish(init, update, [||])
+    let state, dispatch = React.useElmish(init rId, update, [||])
 
 // Page layout
 
@@ -268,7 +317,7 @@ let EditReservationView (cId : Guid) =
                 prop.children [
 
                     alertRow
-                    selectRow members performances state dispatch
+                    selectRow state.ClubMembers state.Performances state dispatch
                     inputRow state dispatch
                     selectRow3 state dispatch
 
