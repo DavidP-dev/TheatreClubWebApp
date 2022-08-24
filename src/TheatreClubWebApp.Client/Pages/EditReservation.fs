@@ -27,6 +27,9 @@ type Msg =
    | ReservationLoaded of Reservation
    | ClubMemberSelected of Guid
    | PerformanceSelected of Guid
+   | EnteredNumberOfTickets of string
+   | SelectedIsPaid of bool
+   | SelectedTicketsReceived of bool
    | FormChanged of Reservation
    | FormSubmitted
    | FormSaved
@@ -55,9 +58,12 @@ let update msg (state: Model) =
 
     match msg with
     | LoadReservation rId -> state, Cmd.OfAsync.perform serviceR.GetReservation rId (fun x -> ReservationLoaded x)
-    | ReservationLoaded r -> { state with Res = Some r; IsValid = validate r }, Cmd.none
-    | ClubMemberSelected cId -> { state with SelectedCm = Some cId }, Cmd.none
-    | PerformanceSelected pId -> { state with SelectedPerf = Some pId }, Cmd.none
+    | ReservationLoaded r -> {state with Res = Some r; IsValid = validate r}, Cmd.none
+    | ClubMemberSelected cId -> {state with SelectedCm = Some cId}, Cmd.none
+    | PerformanceSelected pId -> {state with SelectedPerf = Some pId}, Cmd.none
+    | EnteredNumberOfTickets t -> {state with EnteredNumberOfTickets = Some t}, Cmd.none
+    | SelectedIsPaid t -> {state with SelectedIsPaid = Some t}, Cmd.none
+    | SelectedTicketsReceived t -> {state with SelectedTicketsReceived = Some t}, Cmd.none
     | FormChanged r -> {
                             state with
                                 Res = Some r
@@ -150,10 +156,10 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                         | Some m ->
                             state.Performances
                             |> List.tryFind (fun (p:Performance) -> p.Id = m)
-                            |> Option.map (fun p -> prop.text "Představení: " + p.Title + " " + p.DateAndTime))
+                            |> Option.map (fun p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime))
                             |> Option.defaultValue (prop.text "Vyber divadelní představení")
                         | None -> prop.text "Vyber divadelní představení"
-                   ]
+                    ]
                     Daisy.dropdownContent [
                         prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
                         prop.tabIndex 0
@@ -164,11 +170,9 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                                         prop.text (p.Title + " " + p.DateAndTime)
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            PerformanceSelected p.Id |> dispatch)
-                                        ]
+                                            p.Id |> PerformanceSelected |> dispatch)
                                     ]
                                 ]
-                            ]
                         ]
                     ]
                 ]
@@ -177,7 +181,8 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
     ]
 
 
-let private inputRow state dispatch =
+
+let private inputRow (state : Model) dispatch =
     Html.div [
         prop.className "flex flex-row gap-4"
         prop.children [
@@ -192,9 +197,11 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Počet vstupenek"
                     prop.name "NumberOfTickets"
-                    prop.defaultValue state.Res.NumberOfTickets
+                    prop.defaultValue (state.Res
+                                       |> Option.map (fun x -> x.NumberOfTickets)
+                                       |> Option.defaultValue "")
                     prop.onChange (fun v ->
-                        v. |> NumberOfTicketsSelected |> dispatch
+                        v |> EnteredNumberOfTickets |> dispatch
                     )
                 ]
             ]
@@ -225,7 +232,7 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky JSOU ZAPLACENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            true |> IsPaidSelected |> dispatch)
+                                            true |> SelectedIsPaid |> dispatch)
                                 ]
                             ]
                             Html.li [
@@ -233,7 +240,7 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky NEJSOU ZAPLACENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            false |> IsPaidSelected |> dispatch)
+                                            false |> SelectedIsPaid |> dispatch)
                                 ]
                             ]
                         ]
@@ -258,7 +265,7 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky JSOU DORUČENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            true |> TicketReceivedSelected |> dispatch)
+                                            true |> SelectedTicketsReceived |> dispatch)
                                 ]
                             ]
                             Html.li [
@@ -266,7 +273,7 @@ let private selectRow3 state dispatch =
                                     prop.text "Vstupenky NEJSOU DORUČENY."
                                     prop.onClick (fun ev ->
                                             ev.preventDefault()
-                                            false |> TicketReceivedSelected |> dispatch)
+                                            false |> SelectedTicketsReceived |> dispatch)
                                 ]
                             ]
                         ]
@@ -279,25 +286,6 @@ let private selectRow3 state dispatch =
 [<ReactComponent>]
 
 let EditReservationView (rId : Guid) =
-
-// Load ClubMember list for dropdown menu
-//    let members, setMembers = React.useState(List.empty)
-//
-//    let loadMembers () = async {
-//        let! members = service.GetClubMembers()
-//        setMembers members
-//    }
-//    React.useEffectOnce(loadMembers >> Async.StartImmediate)
-//
-//// Load Performances list for dropdown menu
-//    let performances, setPerformances = React.useState(List.Empty)
-//
-//    let loadPerformances () = async {
-//        let! performances = serviceP.GetPerformances()
-//        setPerformances performances
-//    }
-//    React.useEffectOnce(loadPerformances >> Async.StartImmediate)
-
 // Saving reservation
     let state, dispatch = React.useElmish(init rId, update, [||])
 
