@@ -26,7 +26,7 @@ type MemberDB =
         Surname : string
         Email : string
         PreferredGenres : string
-        MemberReservations : int
+        NumberOfReservedTickets : int
     }
 
 type PerformanceDB =
@@ -122,7 +122,7 @@ module MembersDb =
        Surname = db.Surname
        Email = db.Email
        PreferredGenres = db.PreferredGenres.Split(",") |> Array.map parseGenre |> List.ofArray
-       MemberReservations = db.MemberReservations |> string
+       NumberOfReservedTickets = db.NumberOfReservedTickets |> string
        }
 
     let toDatabase (dm:ClubMember) : MemberDB = {
@@ -131,7 +131,7 @@ module MembersDb =
         Surname = dm.Surname
         Email = dm.Email
         PreferredGenres = dm.PreferredGenres |> List.map genreToString |> (fun x -> String.Join(",", x))
-        MemberReservations = dm.MemberReservations |> int
+        NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         }
 
 module PerformancesDB =
@@ -291,6 +291,19 @@ let updateClubMemberDb (conn:IDbConnection) (cM:ClubMember) =
     }
     |> conn.UpdateAsync
 
+// Returns all club members in database
+let returnAllClubMembersFromDb (conn:IDbConnection) =
+        let output =
+            select {
+                for m in membersTable do
+                selectAll
+                orderBy m.Surname
+                }
+            |> conn.SelectAsync<MemberDB>
+
+        let v = output.Result
+        v
+        |> Seq.toList |> List.map(MembersDb.toDomain)
 
 // function adds Performance
 let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
@@ -344,19 +357,7 @@ let updateReservationDb (conn:IDbConnection) (res:Reservation) =
     }
     |> conn.UpdateAsync
 
-// Returns all club members in database
-let returnAllClubMembersFromDb (conn:IDbConnection) =
-        let output =
-            select {
-                for m in membersTable do
-                selectAll
-                orderBy m.Surname
-                }
-            |> conn.SelectAsync<MemberDB>
 
-        let v = output.Result
-        v
-        |> Seq.toList |> List.map(MembersDb.toDomain)
 
 // Returns all performances
 let returnAllPerformancesFromDb (conn:IDbConnection) =

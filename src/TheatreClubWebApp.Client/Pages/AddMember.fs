@@ -27,7 +27,7 @@ let init () =
           Surname = ""
           Email = ""
           PreferredGenres = List.empty<Genre>
-          MemberReservations = "0"
+          NumberOfReservedTickets = "0"
       }
       IsValid = false
     }, Cmd.none

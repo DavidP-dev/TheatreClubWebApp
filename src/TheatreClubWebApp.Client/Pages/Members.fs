@@ -45,7 +45,7 @@ let MembersView () =
                     Html.td m.Name
                     Html.td m.Email
                     Html.td (String.Join(", ", (List.map toCzech m.PreferredGenres)))
-                    Html.td m.MemberReservations
+                    Html.td m.NumberOfReservedTickets
                     Html.td [
                         Daisy.button.button  [
                             prop.className "btn-sm"
@@ -91,7 +91,7 @@ let MembersView () =
                             Html.th "Jméno"
                             Html.th "Email"
                             Html.th "Preferované žánry"
-                            Html.th "Aktivní rezervace"
+                            Html.th "Počet rezervovaných vstupenek"
                             Html.th "Editace člena"
                             Html.th "Smazání člena"
                         ]]
