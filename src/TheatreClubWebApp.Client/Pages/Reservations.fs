@@ -43,7 +43,7 @@ let ReservationsView () =
                             button.outline
                             button.primary
                             prop.text "Editovat"
-                            prop.onClick (fun _ -> Page.EditReservation |> Router.navigatePage)
+                            prop.onClick (fun _ -> Page.EditReservation r.ReservationID |> Router.navigatePage)
                         ]
                     ]
                     Html.td [
