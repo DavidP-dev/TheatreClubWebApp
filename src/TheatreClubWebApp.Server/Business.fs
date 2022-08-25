@@ -87,10 +87,10 @@ let removeReservation (conn : IDbConnection) (rId : Guid) =
 
 // Checks performance for existence and updates all performance data
 let updateReservation (conn:IDbConnection) (res : Reservation) =
-    let maybeReservation = tryGetReservationById conn res.PerformanceId
+    let maybeReservation = tryGetReservationById conn res.ReservationID
     match maybeReservation with
         | Some _ -> updateReservationDb conn res
-        | None -> failwith $"Uživatel s Id: {res.ReservationID} v databází neexistuje."
+        | None -> failwith $"Rezervace s Id: {res.ReservationID} v databází neexistuje."
 
 // Returns reservation by ID
 let returnReservationById (conn:IDbConnection) (rId:Guid) =

@@ -10,7 +10,6 @@ open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Shared.Domain
 
-// Adding reservation
 type Model = {
     Res : Reservation option
     ClubMembers : ClubMember list
@@ -179,7 +178,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                             state.ClubMembers
                             |> List.tryFind (fun (c:ClubMember) -> c.Id = m)
                             |> Option.map (fun m -> prop.text ("Objednávající: " + m.Surname + " " + m.Name))
-                            |> Option.defaultValue (prop.text "Vyber objednávajícího")
+                            |> Option.defaultValue (prop.text "Objednávající už není v databázi.")
                         | None -> prop.text "Vyber objednávajícího"
                     ]
                     Daisy.dropdownContent [
@@ -205,12 +204,12 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                         button.primary
                         prop.type'.button
                         match state.SelectedPerf with
-                        | Some m ->
+                        | Some perf ->
                             state.Performances
-                            |> List.tryFind (fun (p:Performance) -> p.Id = m)
-                            |> Option.map (fun p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime))
-                            |> Option.defaultValue (prop.text "Vyber divadelní představení")
-                        | None -> prop.text "Vyber divadelní představení"
+                            |> List.tryFind (fun (p:Performance) -> p.Id = perf)
+                            |> Option.map (fun x -> prop.text ("Představení: " + x.Title + " " + x.DateAndTime))
+                            |> Option.defaultValue (prop.text "Představení už není v databázi.")
+                        | None -> prop.text "Vybral None :-("
                     ]
                     Daisy.dropdownContent [
                         prop.className "p-2 shadow menu bg-base-100 rounded-box w-52"
