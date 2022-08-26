@@ -39,7 +39,7 @@ let init () =
             PerformanceId = Guid.NewGuid()
             PerformanceTitle = ""
             PerformanceDateAndTime = ""
-            NumberOfTickets = ""
+            NumberOfReservedTickets = ""
             IsPaid = false
             TicketsReceived = false
         }
@@ -84,7 +84,7 @@ let update msgR (state: ModelR) =
                                         EnteredNumberOfTickets = Some r
                                         Res = {
                                             state.Res with
-                                                NumberOfTickets = r
+                                                NumberOfReservedTickets = r
                                             }
                                         }, Cmd.none
     | TicketReceivedSelected t ->  { state with
@@ -192,7 +192,7 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Počet vstupenek"
                     prop.name "NumberOfTickets"
-                    prop.defaultValue state.Res.NumberOfTickets
+                    prop.defaultValue state.Res.NumberOfReservedTickets
                     prop.onChange (fun v ->
                         v |> NumberOfTicketsSelected |> dispatch
                     )

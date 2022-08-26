@@ -35,7 +35,7 @@ type PerformanceDB =
         Title : string
         Theatre : string
         DateAndTime: DateTimeOffset
-        NumberOfTickets : int
+        NumberOfAvailableTickets : int
         NumberOfReservedTickets : int
         Cost : int
         Genres : string
@@ -50,7 +50,7 @@ type ReservationDB =
         PerformanceId : Guid
         PerformanceTitle : string
         PerformanceDateAndTime : DateTimeOffset
-        NumberOfTickets : int
+        NumberOfReservedTickets : int
         IsPaid : bool
         TicketsReceived : bool
         }
@@ -140,7 +140,7 @@ module PerformancesDB =
         Title = db.Title
         Theatre = db.Theatre
         DateAndTime = db.DateAndTime |> Transfers.dateTimeOffsetToString
-        NumberOfTickets = db.NumberOfTickets |> string
+        NumberOfAvailableTickets = db.NumberOfAvailableTickets |> string
         NumberOfReservedTickets = db.NumberOfReservedTickets |> string
         Cost = db.Cost |> string
         Genres =  db.Genres.Split(",") |> Array.map MembersDb.parseGenre |> List.ofArray
@@ -151,7 +151,7 @@ module PerformancesDB =
         Title = dm.Title
         Theatre = dm.Theatre
         DateAndTime = dm.DateAndTime |> Transfers.tryStringToDateTimeOffset
-        NumberOfTickets = dm.NumberOfTickets |> int
+        NumberOfAvailableTickets = dm.NumberOfAvailableTickets |> int
         NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         Cost = dm.Cost |> int
         Genres = dm.Genres |> List.map MembersDb.genreToString |> (fun x -> String.Join(",", x))}
@@ -165,7 +165,7 @@ module ReservationDB =
         PerformanceId = db.PerformanceId
         PerformanceTitle = db.PerformanceTitle
         PerformanceDateAndTime = db.PerformanceDateAndTime |> Transfers.dateTimeOffsetToString
-        NumberOfTickets = db.NumberOfTickets |> string
+        NumberOfReservedTickets = db.NumberOfReservedTickets |> string
         IsPaid = db.IsPaid
         TicketsReceived = db.TicketsReceived
     }
@@ -177,7 +177,7 @@ module ReservationDB =
         PerformanceId = dm.PerformanceId
         PerformanceTitle = dm.PerformanceTitle
         PerformanceDateAndTime = dm.PerformanceDateAndTime |> Transfers.tryStringToDateTimeOffset
-        NumberOfTickets = dm.NumberOfTickets |> int
+        NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         IsPaid = dm.IsPaid
         TicketsReceived = dm.TicketsReceived
     }

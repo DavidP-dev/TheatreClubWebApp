@@ -27,7 +27,7 @@ let init () =
             Title = ""
             Theatre = ""
             DateAndTime = ""
-            NumberOfTickets = ""
+            NumberOfAvailableTickets = ""
             NumberOfReservedTickets = "0"
             Cost = ""
             Genres = List.empty<Genre>
@@ -130,9 +130,9 @@ let private inputRow state dispatch =
                     input.bordered
                     prop.placeholder "Počet vstupenek"
                     prop.name "NumberOfTickets"
-                    prop.defaultValue state.Perf.NumberOfTickets
+                    prop.defaultValue state.Perf.NumberOfAvailableTickets
                     prop.onChange (fun v ->
-                        { state.Perf with NumberOfTickets = v } |> FormChanged |> dispatch
+                        { state.Perf with NumberOfAvailableTickets = v } |> FormChanged |> dispatch
                     )
                 ]
             ]

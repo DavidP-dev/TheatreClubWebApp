@@ -54,8 +54,6 @@ let MembersView () =
                             prop.text "Editovat"
                             prop.onClick (fun _ -> m.Id |> Page.EditMember |> Router.navigatePage)
                         ]
-                    ]
-                    Html.td [
                         Daisy.button.button  [
                             prop.className "btn-sm"
                             button.outline
@@ -91,9 +89,8 @@ let MembersView () =
                             Html.th "Jméno"
                             Html.th "Email"
                             Html.th "Preferované žánry"
-                            Html.th "Počet rezervovaných vstupenek"
-                            Html.th "Editace člena"
-                            Html.th "Smazání člena"
+                            Html.th "Rezervované vstupenky"
+                            Html.th "Editace / Smazání člena"
                         ]]
                         Html.tbody memberRows
                     ]

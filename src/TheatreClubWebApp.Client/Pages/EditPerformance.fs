@@ -32,7 +32,7 @@ let private validate (p:Performance) =
      String.IsNullOrWhiteSpace(p.Title) |> not
     && String.IsNullOrWhiteSpace(p.Theatre) |> not
     && String.IsNullOrWhiteSpace(p.DateAndTime) |> not
-    && String.IsNullOrWhiteSpace(p.NumberOfTickets) |> not
+    && String.IsNullOrWhiteSpace(p.NumberOfAvailableTickets) |> not
     && String.IsNullOrWhiteSpace(p.Cost) |> not
 
 
@@ -131,9 +131,9 @@ let private inputRow (p: Performance) dispatch =
                     input.bordered
                     prop.placeholder "Počet vstupenek"
                     prop.name "NumberOfTickets"
-                    prop.value p.NumberOfTickets
+                    prop.value p.NumberOfAvailableTickets
                     prop.onChange (fun v ->
-                        { p with NumberOfTickets = v } |> FormChanged |> dispatch
+                        { p with NumberOfAvailableTickets = v } |> FormChanged |> dispatch
                     )
                 ]
             ]

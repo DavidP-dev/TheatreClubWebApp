@@ -32,8 +32,9 @@ let PerformancesView () =
                         Html.td p.Title
                         Html.td p.Theatre
                         Html.td p.DateAndTime
-                        Html.td p.NumberOfTickets
+                        Html.td p.NumberOfAvailableTickets
                         Html.td p.NumberOfReservedTickets
+                        Html.td (p.Cost + " " + "Kč")
                         Html.td [
                             Daisy.button.button  [
                                 prop.className "btn-sm"
@@ -42,8 +43,6 @@ let PerformancesView () =
                                 prop.text "Editovat"
                                 prop.onClick (fun _ -> p.Id |> Page.EditPerformance |> Router.navigatePage)
                             ]
-                        ]
-                        Html.td [
                             Daisy.button.button  [
                                 prop.className "btn-sm"
                                 button.outline
@@ -74,10 +73,10 @@ let PerformancesView () =
                     prop.children [
                         Html.thead [Html.tr [Html.th "Divadelní představení"
                                              Html.th "Divadlo"; Html.th "Datum a čas"
-                                             Html.th "Počet vstupenek"
+                                             Html.th "Dostupné vstupenky"
                                              Html.th "Rezervované vstupenky"
-                                             Html.th "Editace představení"
-                                             Html.th "Smazání představení"]]
+                                             Html.th "Cena vstupenky"
+                                             Html.th "Editace / Smazání představení"]]
                         Html.tbody performanceRows
                     ]
                 ]

@@ -34,7 +34,7 @@ type Performance =
         Title : string
         Theatre : string
         DateAndTime: string
-        NumberOfTickets : string
+        NumberOfAvailableTickets : string
         NumberOfReservedTickets : string
         Cost : string
         Genres : Genre list
@@ -50,7 +50,7 @@ type Reservation =
         PerformanceId : Guid
         PerformanceTitle : string
         PerformanceDateAndTime : string
-        NumberOfTickets : string
+        NumberOfReservedTickets : string
         IsPaid : bool
         TicketsReceived : bool
     }

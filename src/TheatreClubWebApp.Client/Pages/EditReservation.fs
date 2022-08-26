@@ -63,7 +63,7 @@ let private validate (res : Reservation) =
     && String.IsNullOrWhiteSpace(res.MemberSurname) |> not
     && String.IsNullOrWhiteSpace(res.PerformanceTitle) |> not
     && String.IsNullOrWhiteSpace(res.PerformanceDateAndTime) |> not
-    && String.IsNullOrWhiteSpace(res.NumberOfTickets) |> not
+    && String.IsNullOrWhiteSpace(res.NumberOfReservedTickets) |> not
 
 let update msg (state: Model) =
 
@@ -74,7 +74,7 @@ let update msg (state: Model) =
              Res = Some r
              SelectedCm = Some r.MemberId
              SelectedPerf = Some r.PerformanceId
-             EnteredNumberOfTickets = Some r.NumberOfTickets
+             EnteredNumberOfTickets = Some r.NumberOfReservedTickets
              SelectedIsPaid = Some r.IsPaid
              SelectedTicketsReceived = Some r.TicketsReceived
              IsValid = validate r
@@ -129,7 +129,7 @@ let update msg (state: Model) =
                 let reservationWithEnteredNumberOfTickets =
                     {
                          reservationWithPerformance with
-                            NumberOfTickets = state.EnteredNumberOfTickets |> Option.defaultValue ""
+                            NumberOfReservedTickets = state.EnteredNumberOfTickets |> Option.defaultValue ""
                      }
                 let reservationWithSelectedIsPaid =
                     {

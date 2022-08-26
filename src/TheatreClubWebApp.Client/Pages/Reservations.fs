@@ -35,6 +35,7 @@ let ReservationsView () =
                     Html.td r.PerformanceTitle
                     Html.td r.PerformanceDateAndTime
                     Html.td (r.MemberName + " " +  r.MemberSurname)
+                    Html.td r.NumberOfReservedTickets
                     Html.td (r.IsPaid |> boolToHumanLanguage)
                     Html.td (r.TicketsReceived |> boolToHumanLanguage)
                     Html.td [
@@ -45,8 +46,6 @@ let ReservationsView () =
                             prop.text "Editovat"
                             prop.onClick (fun _ -> Page.EditReservation r.ReservationID |> Router.navigatePage)
                         ]
-                    ]
-                    Html.td [
                         Daisy.button.button  [
                             prop.className "btn-sm"
                             button.outline
@@ -79,10 +78,10 @@ let ReservationsView () =
                         Html.thead [Html.th "Divadelní přestavení"
                                     Html.th "Datum a čas představení"
                                     Html.th "Objednatel"
+                                    Html.th "Rezervované vstupenky"
                                     Html.th "Zaplaceno"
-                                    Html.th "Vstupenky doručeny"
-                                    Html.th "Editace rezervace"
-                                    Html.th "Odstranění rezervace"]
+                                    Html.th "Doručeno"
+                                    Html.th "Editace / Smazání rezervace"]
                         Html.tbody reservationsRows
                     ]
                 ]
