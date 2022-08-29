@@ -361,10 +361,11 @@ let addReservationToDb (conn:IDbConnection) (res:Reservation) =
     }
 
 // function remove Reservation
-let removeReservationFromDb (conn:IDbConnection) (rId:Guid) =
+let removeReservationFromDb (conn: IDbConnection) (res: Reservation) =
+    let dbReservation = ReservationDB.toDatabase res
     delete {
         for r in ReservationsTable do
-        where (r.ReservationID = rId )}
+        where (r.ReservationID = dbReservation.ReservationID )}
     |> conn.DeleteAsync
 
 // function update Reservation
