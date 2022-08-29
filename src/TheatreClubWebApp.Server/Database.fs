@@ -377,8 +377,6 @@ let updateReservationDb (conn:IDbConnection) (res:Reservation) =
     }
     |> conn.UpdateAsync
 
-
-
 // Returns all performances
 let returnAllPerformancesFromDb (conn:IDbConnection) =
         let output =
@@ -398,6 +396,7 @@ let returnAllReservationsFromDb (conn:IDbConnection) =
             select {
                 for r in ReservationsTable do
                 selectAll
+                orderBy r.PerformanceTitle
                 }
             |> conn.SelectAsync<ReservationDB>
 
