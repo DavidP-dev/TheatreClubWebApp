@@ -76,9 +76,7 @@ let addReservation (conn:IDbConnection) (res:Reservation) =
     let maybeReservation = tryGetReservationById conn res.ReservationID
     match maybeReservation with
     | Some _ -> failwith $"Rezervace ID {res.ReservationID} je už databázi."
-    | None ->
-        addReservationToDb conn res
-
+    | None -> addReservationToDb conn res
 
 // Checks reservation existence and removes reservation from database
 let removeReservation (conn : IDbConnection) (rId : Guid) =

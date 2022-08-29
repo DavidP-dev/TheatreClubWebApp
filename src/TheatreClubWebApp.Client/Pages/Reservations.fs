@@ -75,13 +75,17 @@ let ReservationsView () =
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
-                        Html.thead [Html.th "Divadelní přestavení"
-                                    Html.th "Datum a čas představení"
-                                    Html.th "Objednatel"
-                                    Html.th "Rezervované vstupenky"
-                                    Html.th "Zaplaceno"
-                                    Html.th "Doručeno"
-                                    Html.th "Editace / Smazání rezervace"]
+                        Html.thead [
+                            Html.tr [
+                                Html.th "Divadelní přestavení"
+                                Html.th "Datum a čas představení"
+                                Html.th "Objednatel"
+                                Html.th "Rezervované vstupenky"
+                                Html.th "Zaplaceno"
+                                Html.th "Doručeno"
+                                Html.th "Editace / Smazání rezervace"
+                            ]
+                        ]
                         Html.tbody reservationsRows
                     ]
                 ]
