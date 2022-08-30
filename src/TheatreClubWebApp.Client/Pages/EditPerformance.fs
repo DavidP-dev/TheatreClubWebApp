@@ -123,13 +123,13 @@ let private inputRow (p: Performance) dispatch =
                 Daisy.label [
                     prop.for' "NumberOfTickets"
                     prop.children [
-                        Daisy.labelText "Počet vstupenek:"
+                        Daisy.labelText "Počet dostupných vstupenek:"
                     ]
                 ]
 
                 Daisy.input [
                     input.bordered
-                    prop.placeholder "Počet vstupenek"
+                    prop.placeholder "Počet dostupných vstupenek"
                     prop.name "NumberOfTickets"
                     prop.value p.NumberOfAvailableTickets
                     prop.onChange (fun v ->
