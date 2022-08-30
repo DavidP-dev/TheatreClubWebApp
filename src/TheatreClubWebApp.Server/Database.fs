@@ -332,6 +332,17 @@ let updatePerformanceDb (conn:IDbConnection) (perf:Performance) =
     }
     |> conn.UpdateAsync
 
+// Returns reservation by ID
+let returnReservationByIdDb (conn:IDbConnection) (rId:Guid)  =
+    let output =
+        select {
+            for r in ReservationsTable do
+            where (r.ReservationID = rId)
+        }
+        |> conn.SelectAsync<ReservationDB>
+    let v = output.Result
+    v |> Seq.toList |> List.map(ReservationDB.toDomain) |> List.head
+
 // function add Reservation
 let addReservationToDb (conn:IDbConnection) (res:Reservation) =
     let dbReservation = ReservationDB.toDatabase res
@@ -363,20 +374,79 @@ let addReservationToDb (conn:IDbConnection) (res:Reservation) =
 // function remove Reservation
 let removeReservationFromDb (conn: IDbConnection) (res: Reservation) =
     let dbReservation = ReservationDB.toDatabase res
-    delete {
-        for r in ReservationsTable do
-        where (r.ReservationID = dbReservation.ReservationID )}
-    |> conn.DeleteAsync
+    task {
+        conn.Open()
+        use trans = conn.BeginTransaction()
 
-// function update Reservation
+        let removeFromReservationTableQuery =
+            delete {
+                for r in ReservationsTable do
+                where (r.ReservationID = dbReservation.ReservationID )
+            }
+        let! _ = conn.DeleteAsync(removeFromReservationTableQuery, trans)
+
+        let! _ =
+            conn.ExecuteAsync("UPDATE ClubMembers SET NumberOfReservedTickets = NumberOfReservedTickets - @amount WHERE Id = @memberId",
+                              (["amount", box dbReservation.NumberOfReservedTickets; "memberId", box dbReservation.MemberId] |> Map.ofList), trans)
+
+        let! _ =
+            conn.ExecuteAsync("UPDATE Performances SET NumberOfReservedTickets = NumberOfReservedTickets - @amount, NumberOfAvailableTickets = NumberOfAvailableTickets + @amount WHERE Id = @performanceId",
+                              (["amount", box dbReservation.NumberOfReservedTickets; "performanceId", box dbReservation.PerformanceId] |> Map.ofList), trans)
+
+        trans.Commit()
+        return ()
+    }
+
+// function update Reservation, related ClubMember and Performance
+
 let updateReservationDb (conn:IDbConnection) (res:Reservation) =
     let dbReservation = ReservationDB.toDatabase res
-    update {
-        for r in ReservationsTable do
-        set dbReservation
-        where (r.ReservationID = dbReservation.ReservationID)
+    task {
+
+        let oldState = (returnReservationByIdDb conn res.ReservationID) |> ReservationDB.toDatabase
+        let isNewMore = dbReservation.NumberOfReservedTickets > oldState.NumberOfReservedTickets
+        let isSame = dbReservation.NumberOfReservedTickets = oldState.NumberOfReservedTickets
+
+        conn.Open()
+        use trans = conn.BeginTransaction()
+
+        let updateReservationQuery =
+            update {
+                for r in ReservationsTable do
+                set dbReservation
+                where (r.ReservationID = dbReservation.ReservationID)
+            }
+        let! _ = conn.UpdateAsync(updateReservationQuery, trans)
+
+
+        if isNewMore then
+
+                let! _ =
+                    conn.ExecuteAsync("UPDATE ClubMembers SET NumberOfReservedTickets = NumberOfReservedTickets + @amount WHERE Id = @memberId",
+                                      (["amount", box (dbReservation.NumberOfReservedTickets - oldState.NumberOfReservedTickets); "memberId", box dbReservation.MemberId] |> Map.ofList), trans)
+
+                let! _ =
+                    conn.ExecuteAsync("UPDATE Performances SET NumberOfReservedTickets = NumberOfReservedTickets + @amount, NumberOfAvailableTickets = NumberOfAvailableTickets - @amount WHERE Id = @performanceId",
+                                      (["amount", box (dbReservation.NumberOfReservedTickets - oldState.NumberOfReservedTickets); "performanceId", box dbReservation.PerformanceId] |> Map.ofList), trans)
+                ()
+
+        elif isSame then
+                ()
+
+        else
+
+                let! _ = conn.ExecuteAsync("UPDATE ClubMembers SET NumberOfReservedTickets = NumberOfReservedTickets - @amount WHERE Id = @memberId",
+                                  (["amount", box (oldState.NumberOfReservedTickets - dbReservation.NumberOfReservedTickets); "memberId", box dbReservation.MemberId] |> Map.ofList), trans)
+
+                let! _ = conn.ExecuteAsync("UPDATE Performances SET NumberOfReservedTickets = NumberOfReservedTickets - @amount, NumberOfAvailableTickets = NumberOfAvailableTickets + @amount WHERE Id = @performanceId",
+                                  (["amount", box (oldState.NumberOfReservedTickets - dbReservation.NumberOfReservedTickets); "performanceId", box dbReservation.PerformanceId] |> Map.ofList), trans)
+                ()
+
+
+        trans.Commit()
+        return ()
     }
-    |> conn.UpdateAsync
+
 
 // Returns all performances
 let returnAllPerformancesFromDb (conn:IDbConnection) =
@@ -452,17 +522,6 @@ let returnPerformanceById (conn:IDbConnection) (pId:Guid)  =
     let v = output.Result
     v |> Seq.toList |> List.map(PerformancesDB.toDomain) |> List.head
 
-// Returns reservation by ID
-let returnReservationByIdDb (conn:IDbConnection) (rId:Guid)  =
-    let output =
-        select {
-            for r in ReservationsTable do
-            where (r.ReservationID = rId)
-        }
-        |> conn.SelectAsync<ReservationDB>
-    let v = output.Result
-    v |> Seq.toList |> List.map(ReservationDB.toDomain) |> List.head
-
 // Returns club members by preferred genres
 let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
     let genreString = MembersDb.dapperGenreString genre
@@ -488,29 +547,3 @@ let returnPerformancesByGenre (conn:IDbConnection) (genre : Genre) =
     let v = output.Result
     v
     |> Seq.toList |> List.map(PerformancesDB.toDomain)
-
-(*
-
-let updateClubMemberFromReservationChange  (conn : IDbConnection) (res : Reservation) (cId : Guid) =
-    let intOfReservedTickets = res.NumberOfReservedTickets |> int
-    let affectedClubMember = getClubMemberById conn cId
-    let updatedAffectedMember = {affectedClubMember with
-                                    NumberOfReservedTickets =
-                                        ((affectedClubMember.NumberOfReservedTickets |> int)
-                                         + intOfReservedTickets)
-                                        |> string}
-    updateClubMember conn updatedAffectedMember
-
-
-let updatePerformanceFromReservationChange  (conn : IDbConnection) (res : Reservation) (pId: Guid) =
-    let intOfReservedTickets = res.NumberOfReservedTickets |> int
-    let affectedPerformance = getPerformanceById conn pId
-    let updatedAffectedPerformance = {affectedPerformance with
-                                         NumberOfReservedTickets = ((affectedPerformance.NumberOfReservedTickets |> int)
-                                         + intOfReservedTickets) |> string
-
-                                         NumberOfAvailableTickets = ((affectedPerformance.NumberOfAvailableTickets |> int)
-                                         - intOfReservedTickets) |> string
-                                         }
-    updatePerformance conn updatedAffectedPerformance
-*)
