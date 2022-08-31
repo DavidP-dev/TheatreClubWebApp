@@ -43,12 +43,33 @@ let PerformancesView () =
                                 prop.text "Editovat"
                                 prop.onClick (fun _ -> p.Id |> Page.EditPerformance |> Router.navigatePage)
                             ]
-                            Daisy.button.button  [
+                            Daisy.button.label [
+                                prop.htmlFor "deleteModal"
                                 prop.className "btn-sm"
                                 button.outline
                                 button.primary
                                 prop.text "Smazat"
-                                prop.onClick (fun _ -> delete p.Id)
+                            ]
+                            Daisy.modalToggle [prop.id "deleteModal"]
+                            Daisy.modal [
+                                prop.children [
+                                    Daisy.modalBox [
+                                        Html.p $"Opravdu chceš smazat představení s názvem {p.Title}?"
+                                        Daisy.modalAction [
+                                            Daisy.button.label [
+                                                prop.htmlFor "deleteModal"
+                                                button.primary
+                                                prop.text "Ano"
+                                                prop.onClick (fun _ -> delete p.Id)
+                                            ]
+                                            Daisy.button.label [
+                                                prop.htmlFor "deleteModal"
+                                                button.primary
+                                                prop.text "Ne"
+                                            ]
+                                        ]
+                                    ]
+                                ]
                             ]
                         ]
                     ]

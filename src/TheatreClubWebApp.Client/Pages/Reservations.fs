@@ -46,12 +46,33 @@ let ReservationsView () =
                             prop.text "Editovat"
                             prop.onClick (fun _ -> Page.EditReservation r.ReservationID |> Router.navigatePage)
                         ]
-                        Daisy.button.button  [
+                        Daisy.button.label [
+                            prop.htmlFor "deleteModal"
                             prop.className "btn-sm"
                             button.outline
                             button.primary
                             prop.text "Smazat"
-                            prop.onClick (fun _ -> delete r.ReservationID)
+                            ]
+                        Daisy.modalToggle [prop.id "deleteModal"]
+                        Daisy.modal [
+                            prop.children [
+                                Daisy.modalBox [
+                                    Html.p $"Opravdu chceš smazat rezervaci na představení {r.PerformanceTitle}?"
+                                    Daisy.modalAction [
+                                        Daisy.button.label [
+                                            prop.htmlFor "deleteModal"
+                                            button.primary
+                                            prop.text "Ano"
+                                            prop.onClick (fun _ -> delete r.ReservationID)
+                                        ]
+                                        Daisy.button.label [
+                                            prop.htmlFor "deleteModal"
+                                            button.primary
+                                            prop.text "Ne"
+                                        ]
+                                    ]
+                                ]
+                            ]
                         ]
                     ]
                 ]
