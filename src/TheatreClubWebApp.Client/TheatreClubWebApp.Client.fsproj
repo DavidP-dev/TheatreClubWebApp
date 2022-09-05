@@ -6,6 +6,7 @@
     <ItemGroup>
         <Compile Include="UseElmish.fs" />
         <Compile Include="Server.fs" />
+        <Compile Include="AuthenticationService.fs" />
         <Compile Include="Router.fs" />
         <Compile Include="SharedView.fs" />
         <Compile Include="Pages\Index.fs" />
@@ -18,11 +19,15 @@
         <Compile Include="Pages\EditReservation.fs" />
         <Compile Include="Pages\AddPerformance.fs" />
         <Compile Include="Pages\AddReservation.fs" />
+        <Compile Include="Pages\Login.fs" />
         <Compile Include="View.fs" />
         <Compile Include="App.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\TheatreClubWebApp.Shared\TheatreClubWebApp.Shared.fsproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="FsToolkit.ErrorHandling" Version="2.13.0" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

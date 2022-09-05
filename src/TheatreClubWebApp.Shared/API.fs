@@ -35,3 +35,9 @@ type ReservationsService = {
 with
     static member RouteBuilder _ m = sprintf "/api/reservations/%s" m
 
+
+type PasswordService = {
+    AddPassword: string -> Async<UserTokenInfo>
+}
+with
+    static member RouteBuilder _ p = sprintf "/api/password/%s" p

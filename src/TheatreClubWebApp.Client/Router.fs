@@ -6,6 +6,7 @@ open Fable.Core.JsInterop
 open System
 
 type Page =
+    | Login
     | Index
     | Members
     | Performances
@@ -23,6 +24,7 @@ module Page =
 
     let parseFromUrlSegments = function
         | [ ] -> Page.Index
+        | [ "login" ] -> Page.Login
         | [ "clenove" ] -> Page.Members
         | [ "predstaveni" ] -> Page.Performances
         | [ "rezervace" ] -> Page.Reservations
@@ -38,6 +40,7 @@ module Page =
 
     let toUrlSegments = function
         | Page.Index -> [ ] |> noQueryString
+        | Page.Login -> [ "login" ] |> noQueryString
         | Page.Members -> [ "clenove" ] |> noQueryString
         | Page.Performances -> [ "predstaveni" ] |> noQueryString
         | Page.Reservations -> [ "rezervace" ] |> noQueryString

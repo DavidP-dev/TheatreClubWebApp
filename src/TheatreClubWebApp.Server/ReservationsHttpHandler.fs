@@ -38,14 +38,12 @@ let getService (dbConn: IDbConnection) =
             return r
         }
         |> Async.AwaitTask
-
     DeleteReservation = fun r ->
         task {
             let! _ = removeReservation dbConn r
             return ()
         }
         |> Async.AwaitTask
-
 }
 
 

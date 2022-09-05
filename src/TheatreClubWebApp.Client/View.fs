@@ -33,12 +33,6 @@ let AppView () =
                 Daisy.navbarStart []
                 Daisy.navbarCenter [
                     Daisy.button.button [
-                        button.outline
-                        button.primary
-                        prop.text "Úvod"
-                        prop.onClick (fun _ -> Page.Index |> Router.navigatePage)
-                    ]
-                    Daisy.button.button [
                          button.outline
                          button.primary
                          prop.text "Členové klubu"
@@ -63,22 +57,29 @@ let AppView () =
             ]
         ]
 
-
-    let render =
+    let content =
         match state.Page with
-        | Page.Index -> Pages.Index.IndexView ()
-        | Page.Members -> Pages.Members.MembersView ()
-        | Page.Performances -> Pages.Performances.PerformancesView ()
-        | Page.Reservations -> Pages.Reservations.ReservationsView ()
-        | Page.AddMember -> Pages.AddMember.AddMemberView ()
-        | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
-        | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
-        | Page.EditMember i -> Pages.EditMember.EditMemberView i
-        | Page.EditPerformance i -> Pages.EditPerformance.EditPerformanceView i
-        | Page.EditReservation i -> Pages.EditReservation.EditReservationView i
+        | Page.Login -> Pages.Login.LoginView()
+        | _ ->
+
+
+            let render =
+                match state.Page with
+                | Page.Index -> Pages.Index.IndexView ()
+                | Page.Members -> Pages.Members.MembersView ()
+                | Page.Performances -> Pages.Performances.PerformancesView ()
+                | Page.Reservations -> Pages.Reservations.ReservationsView ()
+                | Page.AddMember -> Pages.AddMember.AddMemberView ()
+                | Page.AddPerformance -> Pages.AddPerformance.AddPerformanceView ()
+                | Page.AddReservation -> Pages.AddReservation.AddReservationView ()
+                | Page.EditMember i -> Pages.EditMember.EditMemberView i
+                | Page.EditPerformance i -> Pages.EditPerformance.EditPerformanceView i
+                | Page.EditReservation i -> Pages.EditReservation.EditReservationView i
+            React.fragment [ navigation; render ]
+
 
     React.router [
         router.pathMode
         router.onUrlChanged (Page.parseFromUrlSegments >> UrlChanged >> dispatch)
-        router.children [ navigation; render ]
+        router.children content
     ]

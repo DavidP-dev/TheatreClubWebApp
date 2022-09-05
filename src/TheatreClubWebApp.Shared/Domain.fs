@@ -55,3 +55,8 @@ type Reservation =
         TicketsReceived : bool
     }
 
+type UserTokenInfo =
+    {
+        Token : string
+        ExpiresOn : DateTimeOffset
+    }

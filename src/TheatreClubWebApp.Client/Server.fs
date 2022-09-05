@@ -37,3 +37,8 @@ let serviceR =
     Remoting.createApi()
     |> Remoting.withRouteBuilder ReservationsService.RouteBuilder
     |> Remoting.buildProxy<ReservationsService>
+
+let servicePass =
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder PasswordService.RouteBuilder
+    |> Remoting.buildProxy<PasswordService>

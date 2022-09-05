@@ -4,6 +4,7 @@ open System
 open System.Data
 open TheatreClubWebApp.Shared.Domain
 open Database
+open TheatreClubWebApp.Server.Jwt
 
 // Checks club member existence and adds club member to database
 let register (conn:IDbConnection) (cM:ClubMember) =
@@ -116,3 +117,15 @@ let getPerformancesByGenre (conn:IDbConnection) (genre:Genre) =
     let performanceByGenreList = returnPerformancesByGenre conn genre
     printfn "Zde je seznam představení dle zadaného žánru: %A" performanceByGenreList
 
+// Checks user login
+let checkLogin (pass: string) =
+    pass = "kolo"
+
+// Returns JWT token
+let createUserToken () =
+
+    let token, expiresOn = createToken "TheatreClubWebApp" "TheatreClubWebApp" "F9C24F72-46DB-42C6-B35A-586AF65D9D18" (TimeSpan.FromDays(30.)) []
+    {
+        Token = token
+        ExpiresOn = expiresOn
+    }
