@@ -5,17 +5,22 @@ open Feliz.UseElmish
 open Feliz.DaisyUI
 open Router
 open Elmish
+open TheatreClubWebApp.Shared.Domain
 
 type private Msg =
     | UrlChanged of Page
 
 type private State = {
     Page : Page
+    UserTokenInfo : UserTokenInfo option
 }
 
-let private init () =
-    let nextPage = Router.currentPath() |> Page.parseFromUrlSegments
-    { Page = nextPage }, Cmd.navigatePage nextPage
+let private init userTokenInfo () =
+    let nextPage =
+        match userTokenInfo with
+        | Some _ -> Router.currentPath() |> Page.parseFromUrlSegments
+        | None -> Page.Login
+    { Page = nextPage; UserTokenInfo = userTokenInfo }, Cmd.navigatePage nextPage
 
 let private update (msg:Msg) (state:State) : State * Cmd<Msg> =
     match msg with
@@ -23,7 +28,8 @@ let private update (msg:Msg) (state:State) : State * Cmd<Msg> =
 
 [<ReactComponent>]
 let AppView () =
-    let state,dispatch = React.useElmish(init, update)
+    let userTokenInfo  = AuthenticationService.tryGetUserToken ()
+    let state,dispatch = React.useElmish(init userTokenInfo, update)
 
 
     let navigation =
@@ -61,8 +67,6 @@ let AppView () =
         match state.Page with
         | Page.Login -> Pages.Login.LoginView()
         | _ ->
-
-
             let render =
                 match state.Page with
                 | Page.Index -> Pages.Index.IndexView ()

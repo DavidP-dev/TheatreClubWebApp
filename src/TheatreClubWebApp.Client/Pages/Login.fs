@@ -13,25 +13,28 @@ open TheatreClubWebApp.Shared.Domain
 
 type Model = {
     Password : string
+    Error : string option
     }
 
 type Message =
     | PasswordChanged of string
     | FormSubmitted
     | UserAuthenticated of UserTokenInfo
+    | LoginError of exn
 
 let update msg (state: Model) =
     match msg with
     | PasswordChanged p -> { state with Password = p }, Cmd.none
     | FormSubmitted ->
-        state, Cmd.OfAsync.perform servicePass.AddPassword state.Password UserAuthenticated
+        {state with Error = None}, Cmd.OfAsync.either servicePass.AddPassword state.Password UserAuthenticated LoginError
     | UserAuthenticated userTokenInfo ->
         AuthenticationService.saveUserToken userTokenInfo
         state, Page.Index |> Cmd.navigatePage
-
+    | LoginError ex  -> {state with Error = Some "Chyba přihlášení"}, Cmd.none
 let init () =
     {
         Password = ""
+        Error = None
     },Cmd.none
 
 [<ReactComponent>]
@@ -47,6 +50,15 @@ let LoginView () =
                 prop.className "justify-center bg-base-100"
                 prop.text "Ahoj Romčo, zadej svůj kód, aby ses dostala k přísně střeženým údajům členů divadelního klubu."
             ]
+            match state.Error with
+            | Some err ->
+                Daisy.alert [
+                    alert.error
+                    prop.className "justify-center bg-base-100"
+                    prop.text err
+                ]
+            | None -> Html.none
+
             Html.div [
                 prop.className "flex justify-center"
 
