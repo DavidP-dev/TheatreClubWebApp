@@ -46,11 +46,11 @@ let LoginView () =
     Html.div [
         prop.className "flex flex-col gap-4 mx-auto"
         prop.children [
-
-
+            Daisy.navbar [
+                prop.className "mb-4 shadow-sm bg-base-200 rounded-box"
+            ]
             Html.div [
                 prop.className "flex justify-center"
-
                 prop.children [
                     Daisy.formControl [
                         prop.className "flex gap-4"
