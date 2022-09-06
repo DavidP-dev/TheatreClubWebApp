@@ -10,6 +10,7 @@ open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Shared.API
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Shared.Domain
+open Feliz.DaisyUI.Operators
 
 type Model = {
     Password : string
@@ -45,19 +46,7 @@ let LoginView () =
     Html.div [
         prop.className "flex flex-col gap-4 mx-auto"
         prop.children [
-            Daisy.alert [
-                alert.info
-                prop.className "justify-center bg-base-100"
-                prop.text "Ahoj Romčo, zadej svůj kód, aby ses dostala k přísně střeženým údajům členů divadelního klubu."
-            ]
-            match state.Error with
-            | Some err ->
-                Daisy.alert [
-                    alert.error
-                    prop.className "justify-center bg-base-100"
-                    prop.text err
-                ]
-            | None -> Html.none
+
 
             Html.div [
                 prop.className "flex justify-center"
@@ -66,6 +55,29 @@ let LoginView () =
                     Daisy.formControl [
                         prop.className "flex gap-4"
                         prop.children [
+                            Html.div [
+                                prop.className "flex justify-center"
+                                prop.children [
+                                    Html.img [
+                                        prop.className "h-80 w-80"
+                                        ++ mask.squircle
+                                        prop.src "https://source.unsplash.com/random/400x400/?performance"
+                                    ]
+                                ]
+                            ]
+                            Daisy.alert [
+                                alert.info
+                                prop.className "justify-center bg-base-100"
+                                prop.text "Ahoj Romčo, zadej svůj kód, aby ses dostala k přísně střeženým údajům členů divadelního klubu."
+                            ]
+                            match state.Error with
+                            | Some err ->
+                                Daisy.alert [
+                                    alert.error
+                                    prop.className "justify-center bg-base-100"
+                                    prop.text err
+                                ]
+                            | None -> Html.none
                             Daisy.label [Daisy.labelText "Heslo hýr:"]
                             Daisy.input [
                                 prop.type'.password
@@ -74,7 +86,6 @@ let LoginView () =
                                 prop.value state.Password
                                 prop.onChange (fun p -> PasswordChanged p |> dispatch)
                             ]
-
                             Daisy.button.submit [
                                 button.outline
                                 button.primary
