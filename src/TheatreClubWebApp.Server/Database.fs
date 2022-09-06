@@ -22,59 +22,59 @@ let getConnection () : IDbConnection =
 // Database types
 type MemberDB =
     {
-        Id : Guid
-        Name : string
-        Surname : string
-        Email : string
-        PreferredGenres : string
-        NumberOfReservedTickets : int
+        Id: Guid
+        Name: string
+        Surname: string
+        Email: string
+        PreferredGenres: string
+        NumberOfReservedTickets: int
     }
 
 type PerformanceDB =
     {
-        Id : Guid
-        Title : string
+        Id: Guid
+        Title: string
         Theatre : string
         DateAndTime: DateTimeOffset
-        NumberOfAvailableTickets : int
-        NumberOfReservedTickets : int
-        Cost : int
-        Genres : string
+        NumberOfAvailableTickets: int
+        NumberOfReservedTickets: int
+        Cost: int
+        Genres: string
     }
 
 type ReservationDB =
         {
-        ReservationID : Guid
-        MemberId : Guid
-        MemberName : string
+        ReservationID: Guid
+        MemberId: Guid
+        MemberName: string
         MemberSurname: string
-        PerformanceId : Guid
-        PerformanceTitle : string
-        PerformanceDateAndTime : DateTimeOffset
-        NumberOfReservedTickets : int
-        IsPaid : bool
-        TicketsReceived : bool
+        PerformanceId: Guid
+        PerformanceTitle: string
+        PerformanceDateAndTime: DateTimeOffset
+        NumberOfReservedTickets: int
+        IsPaid: bool
+        TicketsReceived: bool
         }
 
 // Modules for transferring data from database layer to domain layer and opposite
 module Transfers =
-    let dateTimeOffsetToString (dto:DateTimeOffset) :string =
+    let dateTimeOffsetToString (dto: DateTimeOffset) : string =
         let dateTimeOffsetString = dto.ToString("dd.MM.yyyy HH:mm")
         dateTimeOffsetString
 
-    let tryStringToDateTimeOffset (s:string) :DateTimeOffset =
+    let tryStringToDateTimeOffset (s: string) : DateTimeOffset =
         let convertedDateTimeExact = DateTimeOffset.TryParseExact(s, "dd.MM.yyyy HH:mm", CultureInfo("es-CZ", false), DateTimeStyles.AssumeLocal)
         match convertedDateTimeExact with
             |true, value -> value
             |false, _  -> DateTimeOffset.MinValue
 
-    let boolToString (b:bool) :string =
+    let boolToString (b: bool) : string =
         let stringFromBool =
             match b with
             | true -> "Ano"
             | false -> "Ne"
         stringFromBool
-    let stringToBool (s:string) :bool =
+    let stringToBool (s: string) :bool =
         let boolFromString =
             match s with
             | "Ano" -> true
@@ -83,7 +83,7 @@ module Transfers =
         boolFromString
 
 module MembersDb =
-    let parseGenre (gn :string) : Genre =
+    let parseGenre (gn: string) : Genre =
         match gn with
         | "Alternative" -> Alternative
         | "Art" -> Art
@@ -117,7 +117,7 @@ module MembersDb =
         | Musical -> "%Musical%"
         | Philosophy -> "%Philosophy%"
 
-    let toDomain (db:MemberDB) : ClubMember = {
+    let toDomain (db: MemberDB) : ClubMember = {
        Id = db.Id
        Name = db.Name
        Surname = db.Surname
@@ -126,7 +126,7 @@ module MembersDb =
        NumberOfReservedTickets = db.NumberOfReservedTickets |> string
        }
 
-    let toDatabase (dm:ClubMember) : MemberDB = {
+    let toDatabase (dm: ClubMember) : MemberDB = {
         Id = dm.Id
         Name = dm.Name
         Surname = dm.Surname
@@ -136,7 +136,7 @@ module MembersDb =
         }
 
 module PerformancesDB =
-    let toDomain (db:PerformanceDB) : Performance = {
+    let toDomain (db: PerformanceDB) : Performance = {
         Id = db.Id
         Title = db.Title
         Theatre = db.Theatre
@@ -147,7 +147,7 @@ module PerformancesDB =
         Genres =  db.Genres.Split(",") |> Array.map MembersDb.parseGenre |> List.ofArray
         }
 
-    let toDatabase (dm:Performance) : PerformanceDB = {
+    let toDatabase (dm: Performance) : PerformanceDB = {
         Id = dm.Id
         Title = dm.Title
         Theatre = dm.Theatre
@@ -158,7 +158,7 @@ module PerformancesDB =
         Genres = dm.Genres |> List.map MembersDb.genreToString |> (fun x -> String.Join(",", x))}
 
 module ReservationDB =
-    let toDomain (db:ReservationDB) : Reservation = {
+    let toDomain (db: ReservationDB) : Reservation = {
         ReservationID = db.ReservationID
         MemberId = db.MemberId
         MemberName = db.MemberName
@@ -170,7 +170,7 @@ module ReservationDB =
         IsPaid = db.IsPaid
         TicketsReceived = db.TicketsReceived
     }
-    let toDatabase (dm:Reservation) : ReservationDB = {
+    let toDatabase (dm: Reservation) : ReservationDB = {
         ReservationID = dm.ReservationID
         MemberId = dm.MemberId
         MemberName = dm.MemberName
@@ -184,15 +184,15 @@ module ReservationDB =
     }
 
 // names of database tables
-
 let membersTable = table'<MemberDB> "ClubMembers"
 
 let performancesTable = table'<PerformanceDB> "Performances"
 
 let ReservationsTable = table'<ReservationDB> "Reservations"
 
+// Operations that can be used by other Db functions
 // Returns list with member by ID, can be used by other functions
-let returnClubMemberById (conn:IDbConnection) (cId:Guid)  =
+let returnClubMemberById (conn: IDbConnection) (cId: Guid)  =
     let output =
         select {
             for m in membersTable do
@@ -203,7 +203,7 @@ let returnClubMemberById (conn:IDbConnection) (cId:Guid)  =
     v |> Seq.toList |> List.map(MembersDb.toDomain)
 
 // Returns performance by ID, can be used by other functions
-let returnPerformanceById (conn:IDbConnection) (pId:Guid)  =
+let returnPerformanceById (conn: IDbConnection) (pId: Guid)  =
     let output =
         select {
             for p in performancesTable do
@@ -213,8 +213,8 @@ let returnPerformanceById (conn:IDbConnection) (pId:Guid)  =
     let v = output.Result
     v |> Seq.toList |> List.map(PerformancesDB.toDomain) |> List.head
 
-// Returns reservation by ID, can be used by other DB functions
-let returnReservationByIdDb (conn:IDbConnection) (rId:Guid)  =
+// Returns reservation by reservation ID, can be used by other DB functions
+let returnReservationByIdDb (conn: IDbConnection) (rId: Guid)  =
     let output =
         select {
             for r in ReservationsTable do
@@ -225,7 +225,7 @@ let returnReservationByIdDb (conn:IDbConnection) (rId:Guid)  =
     v |> Seq.toList |> List.map(ReservationDB.toDomain) |> List.head
 
 // Returns reservations by ClubMember Id, can be used by other DB functions
-let returnReservationsByClubMemberId (conn:IDbConnection) (cId:Guid)  =
+let returnReservationsByClubMemberId (conn: IDbConnection) (cId: Guid)  =
     let output =
         select {
             for r in ReservationsTable do
@@ -236,7 +236,7 @@ let returnReservationsByClubMemberId (conn:IDbConnection) (cId:Guid)  =
     v |> Seq.toList |> List.map(ReservationDB.toDomain)
 
 // Returns reservations by performance Id, can be used by other DB functions
-let returnReservationsByPerformanceId (conn:IDbConnection) (pId:Guid)  =
+let returnReservationsByPerformanceId (conn: IDbConnection) (pId: Guid)  =
     let output =
         select {
             for r in ReservationsTable do
@@ -247,7 +247,7 @@ let returnReservationsByPerformanceId (conn:IDbConnection) (pId:Guid)  =
     v |> Seq.toList |> List.map(ReservationDB.toDomain)
 
 // Checks existence of club member by searching for his email in database
-let tryGetMemberByEmail (conn:IDbConnection) (email:string) =
+let tryGetMemberByEmail (conn: IDbConnection) (email: string) =
     let vysl =
         select {
             for m in membersTable do
@@ -262,7 +262,7 @@ let tryGetMemberByEmail (conn:IDbConnection) (email:string) =
     |> Option.map MembersDb.toDomain
 
 // Checks existence of club member by searching for his Id in database
-let tryGetMemberById (conn:IDbConnection) (cMId:Guid) =
+let tryGetMemberById (conn: IDbConnection) (cMId: Guid) =
     let vysl =
         select {
             for m in membersTable do
@@ -277,7 +277,7 @@ let tryGetMemberById (conn:IDbConnection) (cMId:Guid) =
     |> Option.map MembersDb.toDomain
 
 // Checks existence of performance in database by Title and Date
-let tryGetPerformanceByTitleAndDate (conn:IDbConnection) (performance:Performance) =
+let tryGetPerformanceByTitleAndDate (conn: IDbConnection) (performance: Performance) =
     let parsedPerformance = performance.DateAndTime |> Transfers.tryStringToDateTimeOffset
     let vysl =
         select {
@@ -291,7 +291,7 @@ let tryGetPerformanceByTitleAndDate (conn:IDbConnection) (performance:Performanc
     |> Option.map PerformancesDB.toDomain
 
 // Checks existence of performance in database by performance Id
-let tryGetPerformanceById (conn:IDbConnection) (pId:Guid) =
+let tryGetPerformanceById (conn: IDbConnection) (pId: Guid) =
     let vysl =
         select {
             for p in performancesTable do
@@ -305,7 +305,7 @@ let tryGetPerformanceById (conn:IDbConnection) (pId:Guid) =
 
 
 // Checks existence of registration in database
-let tryGetReservationById (conn : IDbConnection) (rId : Guid) =
+let tryGetReservationById (conn: IDbConnection) (rId: Guid) =
     let vysl =
         select {
             for r in ReservationsTable do
@@ -317,8 +317,9 @@ let tryGetReservationById (conn : IDbConnection) (rId : Guid) =
     |> Seq.tryHead
     |> Option.map ReservationDB.toDomain
 
+// Operations with Club members
 // adds Member to database
-let insertCMToDb (conn:IDbConnection) (cM:ClubMember) =
+let insertCMToDb (conn: IDbConnection) (cM: ClubMember) =
     let dbMember = MembersDb.toDatabase cM
     insert {
         into membersTable
@@ -326,8 +327,8 @@ let insertCMToDb (conn:IDbConnection) (cM:ClubMember) =
     }
     |> conn.InsertAsync
 
-// removes ClubMember from Database
-let removeCmFromDb (conn:IDbConnection) (cId:Guid) =
+// removes ClubMember from Database, modifies related performances and deletes related reservations
+let removeCmFromDb (conn: IDbConnection) (cId: Guid) =
     task {
         let relatedReservations = returnReservationsByClubMemberId conn cId
         let relatedClubPerformanceWithTickets = relatedReservations |> List.map(fun x -> x.PerformanceId, x.NumberOfReservedTickets)
@@ -358,7 +359,6 @@ let removeCmFromDb (conn:IDbConnection) (cId:Guid) =
         return ()
     }
 
-
 // updates Member's data
 let updateClubMemberDb (conn:IDbConnection) (cM:ClubMember) =
     let dbMember = MembersDb.toDatabase cM
@@ -383,7 +383,21 @@ let returnAllClubMembersFromDb (conn:IDbConnection) =
         v
         |> Seq.toList |> List.map(MembersDb.toDomain)
 
-// function adds Performance
+// Returns club members by preferred genres
+let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
+    let genreString = MembersDb.dapperGenreString genre
+    let output =
+         select {
+             for m in membersTable do
+             where (like m.PreferredGenres genreString)}
+             |> conn.SelectAsync<MemberDB>
+
+    let v = output.Result
+    v
+    |> Seq.toList |> List.map(MembersDb.toDomain)
+
+// Operations with performances
+// function adds performance
 let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
     let dbPerformance = PerformancesDB.toDatabase perf
     insert {
@@ -392,7 +406,7 @@ let addPerformanceToDb (conn:IDbConnection) (perf:Performance) =
     }
     |> conn.InsertAsync
 
-// function removes Performance
+// function removes Performance, modifies related members data and deletes related reservations
 let removePerformanceFromDb (conn : IDbConnection) (pId : Guid) =
     task {
         let relatedReservations = returnReservationsByPerformanceId conn pId
@@ -426,7 +440,7 @@ let removePerformanceFromDb (conn : IDbConnection) (pId : Guid) =
     }
 
 // function updates performance
-let updatePerformanceDb (conn:IDbConnection) (perf:Performance) =
+let updatePerformanceDb (conn: IDbConnection) (perf: Performance) =
     let dbPerformance = PerformancesDB.toDatabase perf
     update {
         for p in performancesTable do
@@ -435,9 +449,34 @@ let updatePerformanceDb (conn:IDbConnection) (perf:Performance) =
     }
     |> conn.UpdateAsync
 
+// Returns all performances
+let returnAllPerformancesFromDb (conn:IDbConnection) =
+        let output =
+            select {
+                for p in performancesTable do
+                selectAll
+                orderBy p.Title
+                }
+            |> conn.SelectAsync<PerformanceDB>
 
-// function add Reservation
-let addReservationToDb (conn:IDbConnection) (res:Reservation) =
+        let v = output.Result
+        v |> Seq.toList |> List.map(PerformancesDB.toDomain)
+
+// Returns performances by Genres
+let returnPerformancesByGenre (conn:IDbConnection) (genre : Genre) =
+    let genreString = MembersDb.dapperGenreString genre
+    let output =
+         select {
+             for p in performancesTable do
+             where (like p.Genres genreString)}
+             |> conn.SelectAsync<PerformanceDB>
+
+    let v = output.Result
+    v
+    |> Seq.toList |> List.map(PerformancesDB.toDomain)
+// Operations with reservations
+// Function add Reservation
+let addReservationToDb (conn: IDbConnection) (res: Reservation) =
     let dbReservation = ReservationDB.toDatabase res
     task {
         conn.Open()
@@ -464,7 +503,7 @@ let addReservationToDb (conn:IDbConnection) (res:Reservation) =
         return ()
     }
 
-// function remove Reservation
+// Function remove Reservation, modifies related performances and club members
 let removeReservationFromDb (conn: IDbConnection) (res: Reservation) =
     let dbReservation = ReservationDB.toDatabase res
     task {
@@ -490,8 +529,7 @@ let removeReservationFromDb (conn: IDbConnection) (res: Reservation) =
         return ()
     }
 
-// function update Reservation, related ClubMember and Performance
-
+// Function update Reservation, related ClubMember and Performance
 let updateReservationDb (conn:IDbConnection) (res:Reservation) =
     let dbReservation = ReservationDB.toDatabase res
     task {
@@ -540,20 +578,6 @@ let updateReservationDb (conn:IDbConnection) (res:Reservation) =
         return ()
     }
 
-
-// Returns all performances
-let returnAllPerformancesFromDb (conn:IDbConnection) =
-        let output =
-            select {
-                for p in performancesTable do
-                selectAll
-                orderBy p.Title
-                }
-            |> conn.SelectAsync<PerformanceDB>
-
-        let v = output.Result
-        v |> Seq.toList |> List.map(PerformancesDB.toDomain)
-
 // Returns all reservations
 let returnAllReservationsFromDb (conn:IDbConnection) =
         let output =
@@ -593,28 +617,4 @@ let returnAllUnpaidReservations (conn:IDbConnection) =
     v
     |> Seq.toList |> List.map(ReservationDB.toDomain)
 
-// Returns club members by preferred genres
-let returnClubMembersByGenre (conn:IDbConnection) (genre : Genre) =
-    let genreString = MembersDb.dapperGenreString genre
-    let output =
-         select {
-             for m in membersTable do
-             where (like m.PreferredGenres genreString)}
-             |> conn.SelectAsync<MemberDB>
 
-    let v = output.Result
-    v
-    |> Seq.toList |> List.map(MembersDb.toDomain)
-
-// Returns performances by Genres
-let returnPerformancesByGenre (conn:IDbConnection) (genre : Genre) =
-    let genreString = MembersDb.dapperGenreString genre
-    let output =
-         select {
-             for p in performancesTable do
-             where (like p.Genres genreString)}
-             |> conn.SelectAsync<PerformanceDB>
-
-    let v = output.Result
-    v
-    |> Seq.toList |> List.map(PerformancesDB.toDomain)
