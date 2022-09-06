@@ -68,6 +68,7 @@ let LoginView () =
                         prop.children [
                             Daisy.label [Daisy.labelText "Heslo hýr:"]
                             Daisy.input [
+                                prop.type'.password
                                 input.bordered
                                 prop.placeholder "Heslo"
                                 prop.value state.Password
