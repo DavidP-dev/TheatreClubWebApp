@@ -2,6 +2,7 @@ module TheatreClubWebApp.Client.Pages.Login
 
 
 open Elmish
+open Fable.Remoting.MsgPack.Write
 open Feliz
 open Feliz.UseElmish
 open Feliz.DaisyUI
@@ -11,6 +12,7 @@ open TheatreClubWebApp.Shared.API
 open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Shared.Domain
 open Feliz.DaisyUI.Operators
+open Fable.Core.JsInterop
 
 type Model = {
     Password : string
@@ -43,6 +45,8 @@ let LoginView () =
 
     let state,dispatch = React.useElmish(init, update, [| |])
 
+    let imgSrc = importDefault "../public/img/pointdown_1_1.jpg"
+
     Html.div [
         prop.className "flex flex-col gap-4 mx-auto"
         prop.children [
@@ -61,7 +65,7 @@ let LoginView () =
                                     Html.img [
                                         prop.className "h-80 w-80"
                                         ++ mask.squircle
-                                        prop.src "https://source.unsplash.com/random/400x400/?performance"
+                                        prop.src imgSrc
                                     ]
                                 ]
                             ]
