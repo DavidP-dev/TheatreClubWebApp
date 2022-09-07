@@ -23,8 +23,11 @@ jobs:
       - name: Build
         run: dotnet run Publish
 
-      - name: Publish App
-        uses: actions/upload-artifact@v2
-        with:
-          name: app
-          path: publish/app
+      - name: Deploy to Azure Web App
+          id: deploy-to-webapp
+          uses: azure/webapps-deploy@v2
+          with:
+            app-name: 'theatreclub'
+            slot-name: 'Production'
+            publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_277157F216F84B47AA375CEDC59CA9F2 }}
+            package: publish/app
