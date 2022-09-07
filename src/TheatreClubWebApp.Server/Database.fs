@@ -12,13 +12,6 @@ open Dapper.FSharp.MSSQL
 open Microsoft.Data.SqlClient
 open Microsoft.FSharp.Core
 
-// Connection to database
-let connstring =
-    "data source=PICHA\\sqlexpress;initial catalog=TheatreClubDBTest;integrated security=True;TrustServerCertificate=True"
-
-let getConnection () : IDbConnection =
-    new SqlConnection(connstring)
-
 // Database types
 type MemberDB =
     {

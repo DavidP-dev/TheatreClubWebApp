@@ -7,10 +7,11 @@ open Microsoft.Data.SqlClient
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
+open Microsoft.Extensions.Logging
 
 type Startup(cfg:IConfiguration, env:IWebHostEnvironment) =
     member _.ConfigureServices (services:IServiceCollection) =
-        let connstring = "data source=PICHA\\sqlexpress;initial catalog=TheatreClubDBTest;integrated security=True;TrustServerCertificate=True"
+        let connstring = cfg.GetConnectionString("theatreDb")
         services.AddTransient<IDbConnection>(fun _ -> new SqlConnection(connstring)) |> ignore
 
         services
