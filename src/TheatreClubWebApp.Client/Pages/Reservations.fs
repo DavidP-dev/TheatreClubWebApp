@@ -90,7 +90,13 @@ let ReservationsView () =
                             button.lg
                             prop.text "Přidej rezervaci"
                             prop.onClick (fun _ -> Page.AddReservation |> Router.navigatePage)
-                            ]
+                        ]
+                        Daisy.button.button [
+                            button.outline
+                            button.primary
+                            button.lg
+                            prop.text "Archiv rezervací"
+                        ]
                     ]
                 ]
                 Daisy.table [

@@ -86,7 +86,13 @@ let PerformancesView () =
                             button.lg
                             prop.text "Přidej představení"
                             prop.onClick (fun _ -> Page.AddPerformance |> Router.navigatePage)
-                            ]
+                        ]
+                        Daisy.button.button [
+                            button.outline
+                            button.primary
+                            button.lg
+                            prop.text "Archiv představení"
+                        ]
                     ]
                 ]
                 Daisy.table [
