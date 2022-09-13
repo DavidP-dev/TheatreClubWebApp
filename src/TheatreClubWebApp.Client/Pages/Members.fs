@@ -56,26 +56,26 @@ let MembersView () =
                             prop.onClick (fun _ -> m.Id |> Page.EditMember |> Router.navigatePage)
                         ]
                         Daisy.button.label [
-                            prop.htmlFor "deleteModal"
+                            prop.htmlFor (m.Id |> string)
                             prop.className "btn-sm"
                             button.outline
                             button.primary
                             prop.text "Smazat"
                         ]
-                        Daisy.modalToggle [prop.id "deleteModal"]
+                        Daisy.modalToggle [prop.id (m.Id |> string)]
                         Daisy.modal [
                             prop.children [
                                 Daisy.modalBox [
                                     Html.p $"Opravdu chceš smazat svojí ovečku se jménem {m.Name + spaceString + m.Surname}?"
                                     Daisy.modalAction [
                                         Daisy.button.label [
-                                            prop.htmlFor "deleteModal"
+                                            prop.htmlFor (m.Id |> string)
                                             button.primary
                                             prop.text "Ano"
                                             prop.onClick (fun _ -> delete m.Id)
                                         ]
                                         Daisy.button.label [
-                                            prop.htmlFor "deleteModal"
+                                            prop.htmlFor (m.Id |> string)
                                             button.primary
                                             prop.text "Ne"
                                         ]
