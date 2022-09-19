@@ -448,7 +448,7 @@ let returnAllPerformancesFromDb (conn:IDbConnection) =
             select {
                 for p in performancesTable do
                 selectAll
-                orderBy p.Title
+                orderBy p.DateAndTime
                 }
             |> conn.SelectAsync<PerformanceDB>
 
