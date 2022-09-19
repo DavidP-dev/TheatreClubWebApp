@@ -79,6 +79,8 @@ let AppView () =
                 | Page.EditMember i -> Pages.EditMember.EditMemberView i
                 | Page.EditPerformance i -> Pages.EditPerformance.EditPerformanceView i
                 | Page.EditReservation i -> Pages.EditReservation.EditReservationView i
+                | Page.ArchiveOfPerformances -> Pages.ArchiveOfPerformances.ArchiveOfPerformancesView ()
+                | Page.ArchiveOfReservations -> Pages.ArchiveOfReservations.ArchiveOfReservationsView ()
             React.fragment [ navigation; render ]
 
 

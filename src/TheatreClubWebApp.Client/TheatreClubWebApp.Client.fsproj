@@ -20,6 +20,8 @@
         <Compile Include="Pages\AddPerformance.fs" />
         <Compile Include="Pages\AddReservation.fs" />
         <Compile Include="Pages\Login.fs" />
+        <Compile Include="Pages\ArchiveOfPerformances.fs" />
+        <Compile Include="Pages\ArchiveOfReservations.fs" />
         <Compile Include="View.fs" />
         <Compile Include="App.fs" />
     </ItemGroup>

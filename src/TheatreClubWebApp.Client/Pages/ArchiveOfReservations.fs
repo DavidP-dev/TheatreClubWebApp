@@ -1,4 +1,5 @@
-module TheatreClubWebApp.Client.Pages.Reservations
+module TheatreClubWebApp.Client.Pages.ArchiveOfReservations
+
 
 open Feliz
 open Feliz.DaisyUI
@@ -11,7 +12,7 @@ let boolToHumanLanguage =
         |false -> "Ne"
 
 [<ReactComponent>]
-let ReservationsView () =
+let ArchiveOfReservationsView () =
         let reservations, setReservations = React.useState(List.empty)
 
         let loadReservations () = async {
@@ -32,19 +33,19 @@ let ReservationsView () =
             reservations
             |> List.map (fun r ->
                 Html.tr [
-                    Html.td r.PerformanceTitle
-                    Html.td r.PerformanceDateAndTime
-                    Html.td (r.MemberName + " " +  r.MemberSurname)
-                    Html.td r.NumberOfReservedTickets
-                    Html.td (r.IsPaid |> boolToHumanLanguage)
-                    Html.td (r.TicketsReceived |> boolToHumanLanguage)
+                    Html.td "Dělám na tom"
+                    Html.td "Dělám na tom"
+                    Html.td "Dělám na tom"
+                    Html.td "Dělám na tom"
+                    Html.td "Dělám na tom"
+                    Html.td "Dělám na tom"
                     Html.td [
                         Daisy.button.button  [
                             prop.className "btn-sm"
                             button.outline
                             button.primary
                             prop.text "Editovat"
-                            prop.onClick (fun _ -> Page.EditReservation r.ReservationID |> Router.navigatePage)
+                         //   prop.onClick (fun _ -> Page.EditReservation r.ReservationID |> Router.navigatePage)
                         ]
                         Daisy.button.label [
                             prop.htmlFor (r.ReservationID |> string)
@@ -63,7 +64,7 @@ let ReservationsView () =
                                             prop.htmlFor (r.ReservationID |> string)
                                             button.primary
                                             prop.text "Ano"
-                                            prop.onClick (fun _ -> delete r.ReservationID)
+                                          //  prop.onClick (fun _ -> delete r.ReservationID)
                                         ]
                                         Daisy.button.label [
                                             prop.htmlFor (r.ReservationID |> string)
@@ -81,25 +82,6 @@ let ReservationsView () =
         Html.div[
             prop.className "flex flex-col gap-4"
             prop.children [
-                Html.div[
-                    prop.className "flex justify-center"
-                    prop.children[
-                        Daisy.button.button [
-                            button.outline
-                            button.primary
-                            button.lg
-                            prop.text "Přidej rezervaci"
-                            prop.onClick (fun _ -> Page.AddReservation |> Router.navigatePage)
-                        ]
-                        Daisy.button.button [
-                            button.outline
-                            button.primary
-                            button.lg
-                            prop.text "Archiv rezervací"
-                            prop.onClick (fun _ -> Page.ArchiveOfReservations |> Router.navigatePage)
-                        ]
-                    ]
-                ]
                 Daisy.table [
                     prop.className "w-full"
                     prop.children [
