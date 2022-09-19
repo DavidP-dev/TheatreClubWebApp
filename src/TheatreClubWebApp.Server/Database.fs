@@ -52,7 +52,20 @@ type ReservationDB =
 // Modules for transferring data from database layer to domain layer and opposite
 module Transfers =
     let dateTimeOffsetToString (dto: DateTimeOffset) : string =
-        let dateTimeOffsetString = dto.ToString("dd.MM.yyyy HH:mm")
+        let dayOfWeekInCzech =
+            match dto.DayOfWeek with
+            | DayOfWeek.Monday -> "Pondělí"
+            | DayOfWeek.Tuesday -> "Úterý"
+            | DayOfWeek.Wednesday -> "Středa"
+            | DayOfWeek.Thursday -> "Čtvrtek"
+            | DayOfWeek.Friday -> "Pátek"
+            | DayOfWeek.Saturday -> "Sobota"
+            | DayOfWeek.Sunday -> "Neděle"
+            | _ -> failwith "Takový den neexistuje"
+
+        let dateTimeString = dto.ToString("dd.MM.yyyy HH:mm")
+
+        let dateTimeOffsetString = dayOfWeekInCzech + ", " + dateTimeString
         dateTimeOffsetString
 
     let tryStringToDateTimeOffset (s: string) : DateTimeOffset =
