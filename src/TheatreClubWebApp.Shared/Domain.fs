@@ -21,7 +21,7 @@ type ClubMember =
        Surname: string
        Email: string
        PreferredGenres: Genre list
-       NumberOfReservedTickets: string
+       NumberOfReservedTickets: int
     }
 
 // Every entered theatre play is one Performance record

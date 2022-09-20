@@ -129,7 +129,7 @@ module MembersDb =
        Surname = db.Surname
        Email = db.Email
        PreferredGenres = db.PreferredGenres.Split(",") |> Array.map parseGenre |> List.ofArray
-       NumberOfReservedTickets = db.NumberOfReservedTickets |> string
+       NumberOfReservedTickets = db.NumberOfReservedTickets
        }
 
     let toDatabase (dm: ClubMember) : MemberDB = {
@@ -138,7 +138,7 @@ module MembersDb =
         Surname = dm.Surname
         Email = dm.Email
         PreferredGenres = dm.PreferredGenres |> List.map genreToString |> (fun x -> String.Join(",", x))
-        NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
+        NumberOfReservedTickets = dm.NumberOfReservedTickets
         }
 
 module PerformancesDB =
