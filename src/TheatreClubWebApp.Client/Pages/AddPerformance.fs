@@ -10,6 +10,25 @@ open TheatreClubWebApp.Client.Server
 open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Shared.Domain
 
+module Transfers =
+    let stringToDateTimeOffset (dateTimeString: string) =
+        let preParsedString = // Parse to US style format
+            dateTimeString[3..4]
+            + "/"
+            + dateTimeString[0..1]
+            + "/"
+            + dateTimeString[6..9]
+            + " "
+            + dateTimeString[11..12]
+            + ":"
+            + dateTimeString[14..15]
+
+        let parsedTime = DateTimeOffset.TryParse(preParsedString) // Parse to DateTimeOffset
+
+        match parsedTime with
+        | true, dTO -> dTO
+        | false, _ -> DateTimeOffset.MinValue
+
 type Model = {
     Perf : Performance
     IsValid : bool
@@ -26,7 +45,7 @@ let init () =
             Id = Guid.NewGuid()
             Title = ""
             Theatre = ""
-            DateAndTime = ""
+            DateAndTime = DateTimeOffset.MinValue
             NumberOfAvailableTickets = ""
             NumberOfReservedTickets = "0"
             Cost = ""
@@ -113,7 +132,7 @@ let private inputRow state dispatch =
                     prop.name "DateAndTime"
                     prop.defaultValue ""
                     prop.onChange (fun v ->
-                        { state.Perf with DateAndTime = v  } |> FormChanged |> dispatch
+                        { state.Perf with DateAndTime = v |> Transfers.stringToDateTimeOffset } |> FormChanged |> dispatch
                     )
                 ]
             ]

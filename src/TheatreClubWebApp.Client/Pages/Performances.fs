@@ -1,9 +1,28 @@
 module TheatreClubWebApp.Client.Pages.Performances
 
+open System
 open Feliz
 open Feliz.DaisyUI
 open TheatreClubWebApp.Client.Router
 open TheatreClubWebApp.Client.Server
+
+module Transfers =
+    let dateTimeOffsetToString (dto: DateTimeOffset) : string =
+        let dayOfWeekInCzech =
+            match dto.DayOfWeek with
+            | DayOfWeek.Monday -> "Pondělí"
+            | DayOfWeek.Tuesday -> "Úterý"
+            | DayOfWeek.Wednesday -> "Středa"
+            | DayOfWeek.Thursday -> "Čtvrtek"
+            | DayOfWeek.Friday -> "Pátek"
+            | DayOfWeek.Saturday -> "Sobota"
+            | DayOfWeek.Sunday -> "Neděle"
+            | _ -> failwith "Takový den neexistuje"
+
+        let dateTimeString = dto.ToString("dd.MM.yyyy HH:mm")
+
+        let dateTimeOffsetString = dayOfWeekInCzech + ", " + dateTimeString
+        dateTimeOffsetString
 
 
 [<ReactComponent>]
@@ -31,7 +50,7 @@ let PerformancesView () =
                     Html.tr [
                         Html.td p.Title
                         Html.td p.Theatre
-                        Html.td p.DateAndTime
+                        Html.td (p.DateAndTime |> Transfers.dateTimeOffsetToString)
                         Html.td p.NumberOfAvailableTickets
                         Html.td p.NumberOfReservedTickets
                         Html.td (p.Cost + " " + "Kč")

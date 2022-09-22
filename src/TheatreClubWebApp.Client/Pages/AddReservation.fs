@@ -38,7 +38,7 @@ let init () =
             MemberSurname = ""
             PerformanceId = Guid.NewGuid()
             PerformanceTitle = ""
-            PerformanceDateAndTime = ""
+            PerformanceDateAndTime = DateTimeOffset.MinValue
             NumberOfReservedTickets = ""
             IsPaid = false
             TicketsReceived = false
@@ -153,7 +153,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                     Daisy.button.button [
                         button.primary
                         match state.SelectedPerformance with
-                        | Some p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime )
+                        | Some p -> prop.text ("Představení: " + p.Title + " " + p.DateAndTime.ToString("dd.MM.yyyy HH:mm"))
                         | None -> prop.text "Vyber divadelní představení"
                     ]
                     Daisy.dropdownContent [
@@ -163,7 +163,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                             for p in perf ->
                                 Html.li [
                                     Html.a [
-                                        prop.text (p.Title + " " + p.DateAndTime)
+                                        prop.text (p.Title + " " + p.DateAndTime.ToString("dd.MM.yyyy HH:mm"))
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
                                             p |> PerformanceSelected |> dispatch)

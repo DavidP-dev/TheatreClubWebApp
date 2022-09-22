@@ -146,7 +146,7 @@ module PerformancesDB =
         Id = db.Id
         Title = db.Title
         Theatre = db.Theatre
-        DateAndTime = db.DateAndTime |> Transfers.dateTimeOffsetToString
+        DateAndTime = db.DateAndTime
         NumberOfAvailableTickets = db.NumberOfAvailableTickets |> string
         NumberOfReservedTickets = db.NumberOfReservedTickets |> string
         Cost = db.Cost |> string
@@ -157,7 +157,7 @@ module PerformancesDB =
         Id = dm.Id
         Title = dm.Title
         Theatre = dm.Theatre
-        DateAndTime = dm.DateAndTime |> Transfers.tryStringToDateTimeOffset
+        DateAndTime = dm.DateAndTime
         NumberOfAvailableTickets = dm.NumberOfAvailableTickets |> int
         NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         Cost = dm.Cost |> int
@@ -171,7 +171,7 @@ module ReservationDB =
         MemberSurname = db.MemberSurname
         PerformanceId = db.PerformanceId
         PerformanceTitle = db.PerformanceTitle
-        PerformanceDateAndTime = db.PerformanceDateAndTime |> Transfers.dateTimeOffsetToString
+        PerformanceDateAndTime = db.PerformanceDateAndTime
         NumberOfReservedTickets = db.NumberOfReservedTickets |> string
         IsPaid = db.IsPaid
         TicketsReceived = db.TicketsReceived
@@ -183,7 +183,7 @@ module ReservationDB =
         MemberSurname = dm.MemberSurname
         PerformanceId = dm.PerformanceId
         PerformanceTitle = dm.PerformanceTitle
-        PerformanceDateAndTime = dm.PerformanceDateAndTime |> Transfers.tryStringToDateTimeOffset
+        PerformanceDateAndTime = dm.PerformanceDateAndTime
         NumberOfReservedTickets = dm.NumberOfReservedTickets |> int
         IsPaid = dm.IsPaid
         TicketsReceived = dm.TicketsReceived
@@ -284,11 +284,11 @@ let tryGetMemberById (conn: IDbConnection) (cMId: Guid) =
 
 // Checks existence of performance in database by Title and Date
 let tryGetPerformanceByTitleAndDate (conn: IDbConnection) (performance: Performance) =
-    let parsedPerformance = performance.DateAndTime |> Transfers.tryStringToDateTimeOffset
+    let dateAndTimeOfPerformance = performance.DateAndTime
     let vysl =
         select {
             for p in performancesTable do
-            where (p.Title = performance.Title && p.DateAndTime = parsedPerformance)}
+            where (p.Title = performance.Title && p.DateAndTime = dateAndTimeOfPerformance)}
         |> conn.SelectAsync<PerformanceDB>
 
     let v = vysl.Result

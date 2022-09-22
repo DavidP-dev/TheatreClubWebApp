@@ -33,7 +33,7 @@ let update msg (state: Model) =
     | UserAuthenticated userTokenInfo ->
         AuthenticationService.saveUserToken userTokenInfo
         state, Page.Index |> Cmd.navigatePage
-    | LoginError ex  -> {state with Error = Some "Chyba přihlášení"}, Cmd.none
+    | LoginError ex  -> {state with Error = Some $"Chyba přihlášení: {ex} "}, Cmd.none
 let init () =
     {
         Password = ""

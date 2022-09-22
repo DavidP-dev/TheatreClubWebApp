@@ -30,7 +30,7 @@ type Performance =
         Id: Guid
         Title: string
         Theatre: string
-        DateAndTime: string
+        DateAndTime: DateTimeOffset
         NumberOfAvailableTickets: string
         NumberOfReservedTickets: string
         Cost: string
@@ -46,7 +46,7 @@ type Reservation =
         MemberSurname: String
         PerformanceId: Guid
         PerformanceTitle: string
-        PerformanceDateAndTime: string
+        PerformanceDateAndTime: DateTimeOffset
         NumberOfReservedTickets: string
         IsPaid: bool
         TicketsReceived: bool

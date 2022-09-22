@@ -62,7 +62,7 @@ let private validate (res : Reservation) =
     String.IsNullOrWhiteSpace(res.MemberName) |> not
     && String.IsNullOrWhiteSpace(res.MemberSurname) |> not
     && String.IsNullOrWhiteSpace(res.PerformanceTitle) |> not
-    && String.IsNullOrWhiteSpace(res.PerformanceDateAndTime) |> not
+    && String.IsNullOrWhiteSpace(res.PerformanceDateAndTime.ToString("dd.MM.yyyy HH:mm")) |> not
     && String.IsNullOrWhiteSpace(res.NumberOfReservedTickets) |> not
 
 let update msg (state: Model) =
@@ -207,7 +207,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                         | Some perf ->
                             state.Performances
                             |> List.tryFind (fun (p:Performance) -> p.Id = perf)
-                            |> Option.map (fun x -> prop.text ("Představení: " + x.Title + " " + x.DateAndTime))
+                            |> Option.map (fun x -> prop.text ("Představení: " + x.Title + " " + x.DateAndTime.ToString("dd.MM.yyyy HH:mm")))
                             |> Option.defaultValue (prop.text "Představení už není v databázi.")
                         | None -> prop.text "Vybral None :-("
                     ]
@@ -218,7 +218,7 @@ let private selectRow (mem:ClubMember list) (perf:Performance list) (state:Model
                             for p in perf ->
                                 Html.li [
                                     Html.a [
-                                        prop.text (p.Title + " " + p.DateAndTime)
+                                        prop.text (p.Title + " " + p.DateAndTime.ToString("dd.MM.yyyy HH:mm"))
                                         prop.onClick (fun ev ->
                                             ev.preventDefault()
                                             Fable.Core.JS.console.log("clicked")
